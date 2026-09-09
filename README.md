@@ -67,7 +67,7 @@ Files: `docker-compose.portainer.yml`, variables in `.env.portainer.example`. Th
 1. Push this repository to GitHub or GitLab (Portainer clones it to build the image).
 2. Decide the port the app will publish on the Docker host (`APP_PORT`, default 3000) and make sure the firewall allows only the NPMplus host to reach it. Traffic between NPMplus and the app is plain HTTP on your LAN; TLS terminates at NPMplus.
 3. In Portainer: **Stacks → Add stack → Repository**. Repository URL = your repo, Compose path = `docker-compose.portainer.yml`. Under **Environment variables** choose *Advanced mode* and paste the contents of `.env.portainer.example` with real values (`APP_URL`, `JWT_SECRET`, `POSTGRES_PASSWORD`, SMTP settings, seed admin, `APP_PORT`). Deploy. The first build takes a few minutes.
-4. In NPMplus: **Proxy Hosts → Add**. Domain = your domain, Scheme = `http`, Forward host = the Docker host's IP (for example `192.168.1.20`), Forward port = `APP_PORT` (default `3000`). On the SSL tab request a Let's Encrypt certificate and enable *Force SSL* and *HTTP/2*.
+4. In NPMplus: **Proxy Hosts → Add**. Domain = your domain, Scheme = `http`, Forward host = the Docker host's IP (for example `192.168.1.20`), Forward port = `APP_PORT` (`3030` in the example file; the container itself always listens on 3000). On the SSL tab request a Let's Encrypt certificate and enable *Force SSL* and *HTTP/2*.
 5. Create the chapters, event types, and the first super admin once: in Portainer open the `ypo-app` container → **Console** → `/bin/sh`, then run `node prisma/seed.mjs`. (Or on the server: `docker exec ypo-app node prisma/seed.mjs`.)
 6. Open `https://<your domain>`, sign in as the seed admin, and invite chapter admins from **Admin → Members**.
 
