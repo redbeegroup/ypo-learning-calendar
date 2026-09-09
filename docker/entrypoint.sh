@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+# Production images carry a self-contained Prisma CLI under ./cli; dev uses the project's node_modules.
+PRISMA="./cli/node_modules/.bin/prisma"
+[ -x "$PRISMA" ] || PRISMA="npx prisma"
+
 if [ "$NODE_ENV" = "development" ]; then
   if [ ! -d node_modules/.bin ] || [ ! -f node_modules/.install-stamp ] || [ package-lock.json -nt node_modules/.install-stamp ]; then
     echo ">> installing dependencies"
@@ -16,7 +20,7 @@ has_migrations() {
 
 if has_migrations; then
   echo ">> applying migrations"
-  npx prisma migrate deploy
+  $PRISMA migrate deploy
 fi
 
 if [ -n "$DATABASE_URL_TEST" ]; then
@@ -35,7 +39,7 @@ if [ -n "$DATABASE_URL_TEST" ]; then
     }).catch((e) => { console.error(e); process.exit(1); });
   '
   if has_migrations; then
-    DATABASE_URL="$DATABASE_URL_TEST" npx prisma migrate deploy
+    DATABASE_URL="$DATABASE_URL_TEST" $PRISMA migrate deploy
   fi
 fi
 

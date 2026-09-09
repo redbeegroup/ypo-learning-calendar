@@ -24,6 +24,11 @@ export const acceptInviteSchema = z.object({
   password: passwordSchema,
 });
 
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Current password is required"),
+  newPassword: passwordSchema,
+});
+
 export const inviteUserSchema = z.object({
   email: z.string().email().transform((e) => e.toLowerCase()),
   name: z.string().min(1).max(120),

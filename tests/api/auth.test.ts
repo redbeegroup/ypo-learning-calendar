@@ -6,6 +6,7 @@ import { POST as forgot } from "@/app/api/v1/auth/forgot-password/route";
 import { POST as reset } from "@/app/api/v1/auth/reset-password/route";
 import { POST as acceptInvite } from "@/app/api/v1/auth/accept-invite/route";
 import { POST as inviteUser } from "@/app/api/v1/users/route";
+import { POST as changePassword } from "@/app/api/v1/auth/change-password/route";
 import { prisma } from "@/server/db";
 import { sentEmails } from "./setup";
 import { jsonRequest, createChapter, createUser, tokenFor } from "./helpers";
@@ -129,5 +130,25 @@ describe("password reset flow", () => {
     expect(res.status).toBe(200);
     expect(sentEmails).toHaveLength(0);
     expect(await prisma.user.count()).toBe(0);
+  });
+});
+
+describe("POST /api/v1/auth/change-password", () => {
+  it("requires the current password and then accepts the new one", async () => {
+    const ch = await createChapter();
+    const u = await createUser({ email: "a@x.com", chapterId: ch.id, password: "Old12345!" });
+    const tok = await tokenFor(u.id);
+    const wrong = await changePassword(
+      jsonRequest("/api/v1/auth/change-password", "POST", { currentPassword: "nope", newPassword: "New12345!" }, tok),
+      ctx,
+    );
+    expect(wrong.status).toBe(400);
+    const ok = await changePassword(
+      jsonRequest("/api/v1/auth/change-password", "POST", { currentPassword: "Old12345!", newPassword: "New12345!" }, tok),
+      ctx,
+    );
+    expect(ok.status).toBe(200);
+    expect((await login(jsonRequest("/api/v1/auth/login", "POST", { email: "a@x.com", password: "New12345!" }), ctx)).status).toBe(200);
+    expect((await changePassword(jsonRequest("/api/v1/auth/change-password", "POST", { currentPassword: "x", newPassword: "y" }), ctx)).status).toBe(401);
   });
 });

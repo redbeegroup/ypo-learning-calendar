@@ -1,4 +1,6 @@
-import { PrismaClient, Role, UserStatus } from "@prisma/client";
+// Plain JavaScript so it runs in both the dev container (`npx prisma db seed`)
+// and the production image (`node prisma/seed.mjs`), which has no TypeScript tooling.
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -57,8 +59,8 @@ async function main() {
       email: email.toLowerCase(),
       name,
       passwordHash: await bcrypt.hash(password, 10),
-      role: Role.SUPER_ADMIN,
-      status: UserStatus.ACTIVE,
+      role: "SUPER_ADMIN",
+      status: "ACTIVE",
       chapterId: sg.id,
     },
   });

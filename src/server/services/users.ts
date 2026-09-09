@@ -191,3 +191,13 @@ export async function updateUser(actor: Actor, userId: string, input: UpdateUser
   });
   return toAdminUser(updated);
 }
+
+export async function changePassword(actor: Actor, currentPassword: string, newPassword: string) {
+  const user = await prisma.user.findUniqueOrThrow({ where: { id: actor.id } });
+  if (!(await verifyPassword(currentPassword, user.passwordHash))) {
+    throw new ApiError(400, "WRONG_PASSWORD", "Current password is incorrect", {
+      currentPassword: ["Current password is incorrect"],
+    });
+  }
+  await prisma.user.update({ where: { id: user.id }, data: { passwordHash: await hashPassword(newPassword) } });
+}
