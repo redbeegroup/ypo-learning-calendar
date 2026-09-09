@@ -29,7 +29,9 @@ FROM base AS prisma-cli
 WORKDIR /cli
 COPY package.json /tmp/package.json
 RUN npm init -y >/dev/null \
-  && npm install --no-audit --no-fund --omit=dev "prisma@$(node -p "require('/tmp/package.json').devDependencies.prisma")" \
+  && npm install --no-audit --no-fund --omit=dev \
+       "prisma@$(node -p "require('/tmp/package.json').devDependencies.prisma")" \
+       "bcryptjs@$(node -p "require('/tmp/package.json').dependencies.bcryptjs")" \
   && rm -rf /root/.npm
 
 # ---------- prod: standalone output, non-root ----------
@@ -43,6 +45,8 @@ COPY --from=build --chown=app:app /app/.next/static ./.next/static
 COPY --from=build --chown=app:app /app/public ./public
 COPY --from=build --chown=app:app /app/prisma ./prisma
 COPY --from=prisma-cli --chown=app:app /cli/node_modules ./cli/node_modules
+# The seed script needs bcryptjs at the top level; standalone output only bundles it into server chunks.
+COPY --from=prisma-cli --chown=app:app /cli/node_modules/bcryptjs ./node_modules/bcryptjs
 COPY --chown=app:app docker/entrypoint.sh /entrypoint.sh
 USER app
 EXPOSE 3000
