@@ -58,38 +58,48 @@ Unit tests cover permissions, validation, dates, JWT, and passwords. API tests e
 
 ## Production deploy
 
-One Linux server with Docker, a DNS record for your domain pointing at it, and ports 80/443 open.
+Two supported layouts. Both build the same production image (`Dockerfile`, target `prod`), run migrations automatically on start, and back up Postgres daily.
 
-1. Clone the repo on the server and create the env file:
+### Option A: Portainer stack behind NPMplus (recommended)
+
+Files: `docker-compose.portainer.yml`, variables in `.env.portainer.example`. No ports are published; NPMplus reaches the app over a shared Docker network.
+
+1. Push this repository to GitHub or GitLab (Portainer clones it to build the image).
+2. On the server, find the Docker network NPMplus is attached to:
    ```bash
-   cp .env.production.example .env
+   docker network ls
    ```
-   Fill in `DOMAIN`, `APP_URL`, `JWT_SECRET` (`openssl rand -hex 32`), `POSTGRES_PASSWORD`, the SMTP settings (Resend works over SMTP), and the seed admin.
-2. Build and start everything (app, Postgres, Caddy with automatic HTTPS, nightly backups):
-   ```bash
-   make deploy
-   ```
-   Migrations run automatically when the app container starts.
-3. Create the chapters, event types, and first super admin:
-   ```bash
-   make prod-seed
-   ```
-4. Open `https://<your domain>` and sign in as the seed admin. Invite chapter admins from **Admin → Members**.
+   It is usually `npmplus_default`. Attach NPMplus to it if it is on a custom one.
+3. In Portainer: **Stacks → Add stack → Repository**. Repository URL = your repo, Compose path = `docker-compose.portainer.yml`. Under **Environment variables** choose *Advanced mode* and paste the contents of `.env.portainer.example` with real values (`APP_URL`, `JWT_SECRET`, `POSTGRES_PASSWORD`, SMTP settings, seed admin, `PROXY_NETWORK`). Deploy. The first build takes a few minutes.
+4. In NPMplus: **Proxy Hosts → Add**. Domain = your domain, Scheme = `http`, Forward host = `ypo-app`, Forward port = `3000`. On the SSL tab request a Let's Encrypt certificate and enable *Force SSL* and *HTTP/2*.
+5. Create the chapters, event types, and the first super admin once: in Portainer open the `ypo-app` container → **Console** → `/bin/sh`, then run `node prisma/seed.mjs`. (Or on the server: `docker exec ypo-app node prisma/seed.mjs`.)
+6. Open `https://<your domain>`, sign in as the seed admin, and invite chapter admins from **Admin → Members**.
 
-Later releases are the same command: `make deploy` pulls the latest commit, rebuilds the image, and restarts the app with zero manual steps. Roll back with `git checkout <previous tag>` followed by `make deploy`.
+**Updates:** push to the repo, then in Portainer open the stack and click **Pull and redeploy** (enable *Re-pull image and redeploy* / *Force rebuild*). Migrations apply on restart.
 
-Useful: `make prod-logs`, `make prod-ps`, `make prod-backup` (manual dump), `make prod-restore file=backups/<file>.sql.gz`.
+**Backups:** the `ypo-backup` container writes a gzipped `pg_dump` into the `backups` volume daily. Copy them off the server with `docker cp ypo-backup:/backups ./backups`. Restore with `gunzip -c file.sql.gz | docker exec -i ypo-db psql -U ypo -d ypo`.
 
-### Backups
+**Rollback:** in Portainer, redeploy the stack from the previous commit (set the repository reference to a tag or commit), or `docker compose` on the server with `git checkout <tag>`.
 
-The `backup` container writes a gzipped `pg_dump` into `./backups` once a day and keeps `BACKUP_KEEP_DAYS` (default 14) days. Copy that folder off the server (for example with a cron `rsync` or an object-storage sync).
+### Option B: docker compose with Caddy
+
+Files: `docker-compose.prod.yml`, `Caddyfile`, variables in `.env.production.example`. Caddy publishes 80/443 and obtains certificates itself.
+
+```bash
+cp .env.production.example .env   # fill it in
+make deploy
+make prod-seed
+```
+
+Useful: `make prod-logs`, `make prod-ps`, `make prod-backup`, `make prod-restore file=backups/<file>.sql.gz`.
 
 ## Environment variables
 
 | Variable | Purpose |
 |---|---|
 | `APP_URL` | Public URL, used in emails |
-| `DOMAIN` | Domain for Caddy's certificate (production only) |
+| `DOMAIN` | Domain for Caddy's certificate (Option B only) |
+| `PROXY_NETWORK` | Docker network shared with NPMplus (Option A only) |
 | `JWT_SECRET` | Signs session tokens |
 | `DATABASE_URL` | Postgres connection (set automatically by Compose) |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | Database credentials (production) |

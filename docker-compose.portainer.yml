@@ -1,0 +1,102 @@
+# Portainer stack for the YPO SEA Learning Calendar, fronted by NPMplus (Nginx Proxy Manager).
+#
+# - Deploy as a Portainer "Repository" stack pointing at this file so the image builds from the repo.
+# - Set the variables listed in .env.portainer.example in the stack's "Environment variables" section.
+# - No ports are published: NPMplus reaches the app over the shared Docker network by service name
+#   ("ypo-app", port 3000). Set PROXY_NETWORK to the network NPMplus is attached to.
+# - Everything is a named volume, so the stack works without any files on the host.
+name: ypo-lc
+
+services:
+  app:
+    build:
+      context: .
+      target: prod
+    image: ${APP_IMAGE:-ypo-lc-app:latest}
+    container_name: ypo-app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      APP_URL: ${APP_URL:?set APP_URL, e.g. https://learning.example.org}
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET to a long random string}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ypo}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-ypo}?schema=public
+      EMAIL_FROM: ${EMAIL_FROM:?set EMAIL_FROM, e.g. "YPO SEA Learning <admin@example.org>"}
+      SMTP_HOST: ${SMTP_HOST:?set SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
+      SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-Super Admin}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - default
+      - proxy
+
+  db:
+    image: postgres:16-alpine
+    container_name: ypo-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ypo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-ypo}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ypo} -d ${POSTGRES_DB:-ypo}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - default
+
+  backup:
+    image: postgres:16-alpine
+    container_name: ypo-backup
+    restart: unless-stopped
+    environment:
+      PGHOST: db
+      PGUSER: ${POSTGRES_USER:-ypo}
+      PGPASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB:-ypo}
+      BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS:-14}
+    # Daily pg_dump into the "backups" volume, keeping BACKUP_KEEP_DAYS days.
+    # Copy dumps off the server with: docker cp ypo-backup:/backups ./backups
+    command:
+      - sh
+      - -c
+      - |
+        mkdir -p /backups
+        while true; do
+          f="/backups/$${PGDATABASE}-$$(date -u +%Y%m%d-%H%M%S).sql.gz"
+          if pg_dump --no-owner --no-privileges | gzip > "$$f"; then echo "backup written: $$f"; else echo "backup FAILED" >&2; rm -f "$$f"; fi
+          find /backups -name '*.sql.gz' -mtime +"$${BACKUP_KEEP_DAYS:-14}" -delete
+          sleep 86400
+        done
+    volumes:
+      - backups:/backups
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - default
+
+volumes:
+  pgdata:
+  backups:
+
+networks:
+  default:
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK:-npmplus_default}
