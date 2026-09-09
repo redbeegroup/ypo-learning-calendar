@@ -56,7 +56,8 @@ export function sessionCookieOptions() {
   return {
     httpOnly: true,
     sameSite: "lax" as const,
-    secure: env.isProduction,
+    // Secure only when the public URL is https; allows testing over plain http behind no proxy.
+    secure: env.appUrl.startsWith("https://"),
     path: "/",
     maxAge: SESSION_MAX_AGE_SECONDS,
   };
