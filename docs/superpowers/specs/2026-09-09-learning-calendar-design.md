@@ -52,7 +52,7 @@ All services run as containers. The Mac only needs Docker; Node is never run on 
 
 | Service | Local (`docker-compose.yml`) | Production (`docker-compose.prod.yml`) |
 |---|---|---|
-| `app` | `Dockerfile` dev target: `node:22-alpine`, source bind-mounted, `next dev` with hot reload on port 3000 | `Dockerfile` prod target: multi-stage build, Next.js standalone output, non-root user, ~150 MB image |
+| `app` | `Dockerfile` dev target: `node:22-bookworm-slim` (Alpine crashes `next dev` with SIGBUS on Docker Desktop), source bind-mounted, `next dev` with hot reload on port 3000 | `Dockerfile` prod target: multi-stage build, Next.js standalone output plus a self-contained Prisma CLI for migrations, non-root user |
 | `db` | `postgres:16-alpine`, named volume `pgdata` | same, named volume, daily `pg_dump` sidecar to a backup folder |
 | `mailpit` | catches all email, web UI on port 8025 | not present; app sends via Resend |
 | `caddy` | not present | Caddy reverse proxy with automatic HTTPS for your domain |
