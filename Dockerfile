@@ -8,10 +8,9 @@ WORKDIR /app
 # ---------- dev: source is bind-mounted, deps live in a named volume ----------
 FROM base AS dev
 ENV NODE_ENV=development
-COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 EXPOSE 3000
-ENTRYPOINT ["/entrypoint.sh"]
+# Use the bind-mounted script so edits to docker/entrypoint.sh apply without a rebuild.
+ENTRYPOINT ["sh", "/app/docker/entrypoint.sh"]
 CMD ["npm", "run", "dev"]
 
 # ---------- deps: install production + build deps ----------
