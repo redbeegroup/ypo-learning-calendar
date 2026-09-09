@@ -1,6 +1,8 @@
 # Portainer stack for the YPO SEA Learning Calendar, fronted by NPMplus (Nginx Proxy Manager).
 #
-# - Deploy as a Portainer "Repository" stack pointing at this file so the image builds from the repo.
+# - The image is built by GitHub Actions (.github/workflows/build-image.yml) and published to GHCR.
+#   Portainer only pulls it, so no build happens on the server. Set APP_IMAGE to your image, e.g.
+#   ghcr.io/<github-user>/ypo-lc:latest. Deploy as a Portainer "Repository" stack (or paste this file).
 # - Set the variables listed in .env.portainer.example in the stack's "Environment variables" section.
 # - The app is published on APP_PORT (default 3030) of this Docker host. The ":3000" after it is the port inside the container and must stay. NPMplus, running on another host,
 #   forwards to http://<this host's IP>:<APP_PORT>. Firewall that port so only the NPMplus host can reach it.
@@ -9,10 +11,7 @@ name: ypo-lc
 
 services:
   app:
-    build:
-      context: .
-      target: prod
-    image: ${APP_IMAGE:-ypo-lc-app:latest}
+    image: ${APP_IMAGE:?set APP_IMAGE, e.g. ghcr.io/<github-user>/ypo-lc:latest}
     container_name: ypo-app
     restart: unless-stopped
     environment:

@@ -64,18 +64,18 @@ Two supported layouts. Both build the same production image (`Dockerfile`, targe
 
 Files: `docker-compose.portainer.yml`, variables in `.env.portainer.example`. The app publishes one port on its Docker host; NPMplus (on the same or another host) forwards to that host's IP and port.
 
-1. Push this repository to GitHub or GitLab (Portainer clones it to build the image).
+1. Push this repository to GitHub. The workflow in `.github/workflows/build-image.yml` builds the production image on every push to `main` and publishes it as `ghcr.io/<github-user>/ypo-lc:latest`. Portainer pulls that image, so nothing is built on the server (building inside Portainer often fails with BuildKit errors). If the repository is private, make the package public (GitHub → Packages → ypo-lc → Package settings → Change visibility) or add a GHCR registry in Portainer (**Registries → Add**, username = your GitHub user, password = a token with `read:packages`).
 2. Decide the port the app will publish on the Docker host (`APP_PORT`, default 3000) and make sure the firewall allows only the NPMplus host to reach it. Traffic between NPMplus and the app is plain HTTP on your LAN; TLS terminates at NPMplus.
-3. In Portainer: **Stacks → Add stack → Repository**. Repository URL = your repo, Compose path = `docker-compose.portainer.yml`. Under **Environment variables** choose *Advanced mode* and paste the contents of `.env.portainer.example` with real values (`APP_URL`, `JWT_SECRET`, `POSTGRES_PASSWORD`, SMTP settings, seed admin, `APP_PORT`). Deploy. The first build takes a few minutes.
+3. In Portainer: **Stacks → Add stack → Repository**. Repository URL = your repo, Compose path = `docker-compose.portainer.yml`. Under **Environment variables** choose *Advanced mode* and paste the contents of `.env.portainer.example` with real values (`APP_IMAGE`, `APP_URL`, `JWT_SECRET`, `POSTGRES_PASSWORD`, SMTP settings, seed admin, `APP_PORT`). Deploy.
 4. In NPMplus: **Proxy Hosts → Add**. Domain = your domain, Scheme = `http`, Forward host = the Docker host's IP (for example `192.168.1.20`), Forward port = `APP_PORT` (`3030` in the example file; the container itself always listens on 3000). On the SSL tab request a Let's Encrypt certificate and enable *Force SSL* and *HTTP/2*.
 5. Create the chapters, event types, and the first super admin once: in Portainer open the `ypo-app` container → **Console** → `/bin/sh`, then run `node prisma/seed.mjs`. (Or on the server: `docker exec ypo-app node prisma/seed.mjs`.)
 6. Open `https://<your domain>`, sign in as the seed admin, and invite chapter admins from **Admin → Members**.
 
-**Updates:** push to the repo, then in Portainer open the stack and click **Pull and redeploy** (enable *Re-pull image and redeploy* / *Force rebuild*). Migrations apply on restart.
+**Updates:** push to `main`, wait for the GitHub Action to finish (about 3 to 5 minutes), then in Portainer open the stack and click **Pull and redeploy** with *Re-pull image* enabled. Migrations apply on restart.
 
 **Backups:** the `ypo-backup` container writes a gzipped `pg_dump` into the `backups` volume daily. Copy them off the server with `docker cp ypo-backup:/backups ./backups`. Restore with `gunzip -c file.sql.gz | docker exec -i ypo-db psql -U ypo -d ypo`.
 
-**Rollback:** in Portainer, redeploy the stack from the previous commit (set the repository reference to a tag or commit), or `docker compose` on the server with `git checkout <tag>`.
+**Rollback:** every build is also tagged with its commit SHA (`ghcr.io/<github-user>/ypo-lc:<sha>`). Set `APP_IMAGE` to a previous tag and update the stack.
 
 ### Option B: docker compose with Caddy
 
@@ -95,6 +95,7 @@ Useful: `make prod-logs`, `make prod-ps`, `make prod-backup`, `make prod-restore
 |---|---|
 | `APP_URL` | Public URL, used in emails |
 | `DOMAIN` | Domain for Caddy's certificate (Option B only) |
+| `APP_IMAGE` | Image to run, published by GitHub Actions to GHCR (Option A only) |
 | `APP_PORT` / `APP_BIND` | Port and interface the app publishes for NPMplus (Option A only) |
 | `JWT_SECRET` | Signs session tokens |
 | `DATABASE_URL` | Postgres connection (set automatically by Compose) |
