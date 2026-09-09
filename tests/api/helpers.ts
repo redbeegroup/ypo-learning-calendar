@@ -41,3 +41,23 @@ export async function createUser(opts: {
 export async function tokenFor(userId: string) {
   return signSessionToken({ sub: userId });
 }
+
+export async function createEventType(name = "Business") {
+  return prisma.eventType.create({ data: { name } });
+}
+
+export function eventBody(overrides: Record<string, unknown> = {}) {
+  return {
+    title: "Leadership Breakfast",
+    description: "Coffee and **ideas**",
+    startAt: "2026-10-01T01:00:00.000Z",
+    endAt: "2026-10-01T03:00:00.000Z",
+    timezone: "Asia/Singapore",
+    venue: "Raffles Hotel",
+    isOnline: false,
+    visibility: "REGIONAL",
+    accessChapterIds: [],
+    paymentType: "FREE",
+    ...overrides,
+  };
+}
