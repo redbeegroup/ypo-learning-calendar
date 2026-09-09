@@ -2,8 +2,8 @@
 #
 # - Deploy as a Portainer "Repository" stack pointing at this file so the image builds from the repo.
 # - Set the variables listed in .env.portainer.example in the stack's "Environment variables" section.
-# - No ports are published: NPMplus reaches the app over the shared Docker network by service name
-#   ("ypo-app", port 3000). Set PROXY_NETWORK to the network NPMplus is attached to.
+# - The app is published on APP_PORT (default 3000) of this Docker host. NPMplus, running on another host,
+#   forwards to http://<this host's IP>:<APP_PORT>. Firewall that port so only the NPMplus host can reach it.
 # - Everything is a named volume, so the stack works without any files on the host.
 name: ypo-lc
 
@@ -29,6 +29,8 @@ services:
       SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
       SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-Super Admin}
+    ports:
+      - "${APP_BIND:-0.0.0.0}:${APP_PORT:-3000}:3000"
     depends_on:
       db:
         condition: service_healthy
@@ -38,9 +40,6 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    networks:
-      - default
-      - proxy
 
   db:
     image: postgres:16-alpine
@@ -57,8 +56,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    networks:
-      - default
 
   backup:
     image: postgres:16-alpine
@@ -88,15 +85,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    networks:
-      - default
 
 volumes:
   pgdata:
   backups:
-
-networks:
-  default:
-  proxy:
-    external: true
-    name: ${PROXY_NETWORK:-npmplus_default}

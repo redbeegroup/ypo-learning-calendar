@@ -62,16 +62,12 @@ Two supported layouts. Both build the same production image (`Dockerfile`, targe
 
 ### Option A: Portainer stack behind NPMplus (recommended)
 
-Files: `docker-compose.portainer.yml`, variables in `.env.portainer.example`. No ports are published; NPMplus reaches the app over a shared Docker network.
+Files: `docker-compose.portainer.yml`, variables in `.env.portainer.example`. The app publishes one port on its Docker host; NPMplus (on the same or another host) forwards to that host's IP and port.
 
 1. Push this repository to GitHub or GitLab (Portainer clones it to build the image).
-2. On the server, find the Docker network NPMplus is attached to:
-   ```bash
-   docker network ls
-   ```
-   It is usually `npmplus_default`. Attach NPMplus to it if it is on a custom one.
-3. In Portainer: **Stacks → Add stack → Repository**. Repository URL = your repo, Compose path = `docker-compose.portainer.yml`. Under **Environment variables** choose *Advanced mode* and paste the contents of `.env.portainer.example` with real values (`APP_URL`, `JWT_SECRET`, `POSTGRES_PASSWORD`, SMTP settings, seed admin, `PROXY_NETWORK`). Deploy. The first build takes a few minutes.
-4. In NPMplus: **Proxy Hosts → Add**. Domain = your domain, Scheme = `http`, Forward host = `ypo-app`, Forward port = `3000`. On the SSL tab request a Let's Encrypt certificate and enable *Force SSL* and *HTTP/2*.
+2. Decide the port the app will publish on the Docker host (`APP_PORT`, default 3000) and make sure the firewall allows only the NPMplus host to reach it. Traffic between NPMplus and the app is plain HTTP on your LAN; TLS terminates at NPMplus.
+3. In Portainer: **Stacks → Add stack → Repository**. Repository URL = your repo, Compose path = `docker-compose.portainer.yml`. Under **Environment variables** choose *Advanced mode* and paste the contents of `.env.portainer.example` with real values (`APP_URL`, `JWT_SECRET`, `POSTGRES_PASSWORD`, SMTP settings, seed admin, `APP_PORT`). Deploy. The first build takes a few minutes.
+4. In NPMplus: **Proxy Hosts → Add**. Domain = your domain, Scheme = `http`, Forward host = the Docker host's IP (for example `192.168.1.20`), Forward port = `APP_PORT` (default `3000`). On the SSL tab request a Let's Encrypt certificate and enable *Force SSL* and *HTTP/2*.
 5. Create the chapters, event types, and the first super admin once: in Portainer open the `ypo-app` container → **Console** → `/bin/sh`, then run `node prisma/seed.mjs`. (Or on the server: `docker exec ypo-app node prisma/seed.mjs`.)
 6. Open `https://<your domain>`, sign in as the seed admin, and invite chapter admins from **Admin → Members**.
 
@@ -99,7 +95,7 @@ Useful: `make prod-logs`, `make prod-ps`, `make prod-backup`, `make prod-restore
 |---|---|
 | `APP_URL` | Public URL, used in emails |
 | `DOMAIN` | Domain for Caddy's certificate (Option B only) |
-| `PROXY_NETWORK` | Docker network shared with NPMplus (Option A only) |
+| `APP_PORT` / `APP_BIND` | Port and interface the app publishes for NPMplus (Option A only) |
 | `JWT_SECRET` | Signs session tokens |
 | `DATABASE_URL` | Postgres connection (set automatically by Compose) |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | Database credentials (production) |
