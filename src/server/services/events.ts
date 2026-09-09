@@ -2,24 +2,34 @@ import { Prisma, type Chapter, type EventStatus } from "@prisma/client";
 import { prisma } from "@/server/db";
 import { ApiError, forbidden, notFound } from "@/server/api";
 import { canManageEvent, canRegisterForEvent, isAdmin, type Actor, type RegisterCheck } from "@/server/permissions";
+import { promoteWaitlist, sendPromotionEmails } from "@/server/services/waitlist";
 import type { EventInput, EventListQuery } from "@/lib/validation/events";
 
-const include = {
-  hostChapter: true,
-  eventType: true,
-  chapterAccess: { include: { chapter: true } },
-  _count: {
-    select: {
-      registrations: { where: { status: "REGISTERED" } },
+/** Include clause that also loads the acting user's own registration (at most one row). */
+export function eventInclude(userId: string) {
+  return {
+    hostChapter: true,
+    eventType: true,
+    chapterAccess: { include: { chapter: true } },
+    registrations: {
+      where: { userId },
+      select: { id: true, status: true, paymentStatus: true, registeredAt: true },
     },
-  },
-} satisfies Prisma.EventInclude;
+    _count: {
+      select: {
+        registrations: { where: { status: "REGISTERED" } },
+      },
+    },
+  } satisfies Prisma.EventInclude;
+}
 
-type EventRow = Prisma.EventGetPayload<{ include: typeof include }>;
+export type EventRow = Prisma.EventGetPayload<{ include: ReturnType<typeof eventInclude> }>;
 
 export type EventDto = ReturnType<typeof toEventDto>;
 
-export function toEventDto(e: EventRow, actor: Actor, waitlistedCount = 0) {
+type Extras = { waitlistedCount?: number; waitlistPosition?: number | null };
+
+export function toEventDto(e: EventRow, actor: Actor, extras: Extras = {}) {
   const accessChapterIds = e.chapterAccess.map((a) => a.chapterId);
   const registeredCount = e._count.registrations;
   const registration: RegisterCheck = canRegisterForEvent(actor, {
@@ -31,6 +41,7 @@ export function toEventDto(e: EventRow, actor: Actor, waitlistedCount = 0) {
     registrationOpensAt: e.registrationOpensAt,
     registrationClosesAt: e.registrationClosesAt,
   });
+  const mine = e.registrations.find((r) => r.status !== "CANCELLED") ?? null;
   return {
     id: e.id,
     title: e.title,
@@ -48,7 +59,7 @@ export function toEventDto(e: EventRow, actor: Actor, waitlistedCount = 0) {
     accessChapters: e.chapterAccess.map((a) => pickChapter(a.chapter)),
     capacity: e.capacity,
     registeredCount,
-    waitlistedCount,
+    waitlistedCount: extras.waitlistedCount ?? 0,
     spotsLeft: e.capacity === null ? null : Math.max(0, e.capacity - registeredCount),
     registrationOpensAt: e.registrationOpensAt?.toISOString() ?? null,
     registrationClosesAt: e.registrationClosesAt?.toISOString() ?? null,
@@ -60,6 +71,15 @@ export function toEventDto(e: EventRow, actor: Actor, waitlistedCount = 0) {
     status: e.status,
     canManage: canManageEvent(actor, e),
     registration,
+    myRegistration: mine
+      ? {
+          id: mine.id,
+          status: mine.status,
+          paymentStatus: mine.paymentStatus,
+          registeredAt: mine.registeredAt.toISOString(),
+        }
+      : null,
+    waitlistPosition: extras.waitlistPosition ?? null,
     createdAt: e.createdAt.toISOString(),
     updatedAt: e.updatedAt.toISOString(),
   };
@@ -117,7 +137,7 @@ export async function createEvent(actor: Actor, input: EventInput) {
       ...toData(input, actor.id),
       chapterAccess: { create: accessIds.map((chapterId) => ({ chapterId })) },
     },
-    include,
+    include: eventInclude(actor.id),
   });
   return toEventDto(event, actor);
 }
@@ -128,17 +148,21 @@ export async function updateEvent(actor: Actor, id: string, input: EventInput) {
   if (!canManageEvent(actor, existing) || !canManageEvent(actor, { hostChapterId: input.hostChapterId })) forbidden();
   await assertRefs(input);
   const accessIds = input.visibility === "CHAPTER_SPECIFIC" ? input.accessChapterIds : [];
-  const event = await prisma.$transaction(async (tx) => {
+  const { event, promoted } = await prisma.$transaction(async (tx) => {
     await tx.eventChapterAccess.deleteMany({ where: { eventId: id } });
-    return tx.event.update({
+    const event = await tx.event.update({
       where: { id },
       data: {
         ...toData(input),
         chapterAccess: { create: accessIds.map((chapterId) => ({ chapterId })) },
       },
-      include,
+      include: eventInclude(actor.id),
     });
+    // A larger capacity frees seats for waitlisted members.
+    const promoted = event.status === "PUBLISHED" ? await promoteWaitlist(tx, event) : [];
+    return { event, promoted };
   });
+  await sendPromotionEmails(event, promoted);
   return toEventDto(event, actor);
 }
 
@@ -149,7 +173,7 @@ async function setStatus(actor: Actor, id: string, status: EventStatus) {
   if (status === "PUBLISHED" && existing.status === "CANCELLED") {
     throw new ApiError(400, "INVALID_STATE", "A cancelled event cannot be published again");
   }
-  const event = await prisma.event.update({ where: { id }, data: { status }, include });
+  const event = await prisma.event.update({ where: { id }, data: { status }, include: eventInclude(actor.id) });
   return toEventDto(event, actor);
 }
 
@@ -205,7 +229,7 @@ export async function listEvents(actor: Actor, q: EventListQuery) {
     prisma.event.count({ where }),
     prisma.event.findMany({
       where,
-      include,
+      include: eventInclude(actor.id),
       orderBy: [{ startAt: "asc" }, { title: "asc" }],
       skip: (q.page - 1) * q.pageSize,
       take: q.pageSize,
@@ -215,11 +239,17 @@ export async function listEvents(actor: Actor, q: EventListQuery) {
 }
 
 export async function getEvent(actor: Actor, id: string) {
-  const row = await prisma.event.findUnique({ where: { id }, include });
+  const row = await prisma.event.findUnique({ where: { id }, include: eventInclude(actor.id) });
   if (!row) notFound("Event");
   if (row.status !== "PUBLISHED" && !canManageEvent(actor, row)) notFound("Event");
-  const waitlisted = await prisma.registration.count({ where: { eventId: id, status: "WAITLISTED" } });
-  return toEventDto(row, actor, waitlisted);
+  const waitlistedCount = await prisma.registration.count({ where: { eventId: id, status: "WAITLISTED" } });
+  const mine = row.registrations.find((r) => r.status === "WAITLISTED");
+  const waitlistPosition = mine
+    ? (await prisma.registration.count({
+        where: { eventId: id, status: "WAITLISTED", registeredAt: { lt: mine.registeredAt } },
+      })) + 1
+    : null;
+  return toEventDto(row, actor, { waitlistedCount, waitlistPosition });
 }
 
 export async function listChapters() {

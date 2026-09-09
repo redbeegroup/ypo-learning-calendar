@@ -14,6 +14,7 @@ import {
   registrationHint,
   visibilityLabel,
 } from "@/components/events/event-badges";
+import { RegisterButton } from "@/components/events/register-button";
 import { Button } from "@/components/ui/button";
 
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -27,6 +28,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
     if (e instanceof ApiError && e.status === 404) notFound();
     throw e;
   }
+  const paymentPending = event.paymentType === "PAID" && event.myRegistration?.paymentStatus === "PENDING";
 
   return (
     <article className="mx-auto max-w-3xl space-y-6">
@@ -77,6 +79,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           <span>
             {visibilityLabel(event)}
             {event.capacity !== null && ` · ${event.registeredCount}/${event.capacity} registered`}
+            {event.waitlistedCount > 0 && ` · ${event.waitlistedCount} waitlisted`}
           </span>
         </div>
         <div className="flex items-start gap-2">
@@ -85,9 +88,14 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       </div>
 
       {event.paymentType === "PAID" && (
-        <div className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm">
+        <div
+          className={`rounded-lg border p-4 text-sm ${
+            paymentPending ? "border-amber-400 bg-amber-100" : "border-amber-300 bg-amber-50"
+          }`}
+        >
           <div className="font-semibold">
-            Paid event: {event.currency} {event.price}
+            {paymentPending ? "Payment pending: " : "Paid event: "}
+            {event.currency} {event.price}
           </div>
           {event.paymentInstructions && <p className="mt-1 whitespace-pre-line">{event.paymentInstructions}</p>}
           {event.paymentUrl && (
@@ -103,14 +111,17 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         </div>
       )}
 
-      <div className="flex flex-wrap gap-2">
-        <Button disabled={!event.registration.ok} title={event.registration.ok ? undefined : registrationHint(event)}>
-          {event.spotsLeft === 0 ? "Join waitlist" : "Register"}
-        </Button>
+      <div className="flex flex-wrap items-start gap-2">
+        <RegisterButton event={event} />
         {event.canManage && (
-          <Button asChild variant="outline">
-            <Link href={`/admin/events/${event.id}/edit`}>Edit event</Link>
-          </Button>
+          <>
+            <Button asChild variant="outline">
+              <Link href={`/admin/events/${event.id}/edit`}>Edit event</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href={`/admin/events/${event.id}/registrations`}>Registrations</Link>
+            </Button>
+          </>
         )}
       </div>
 
