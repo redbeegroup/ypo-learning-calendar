@@ -10,3 +10,4 @@ test-results
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
+.claude/settings.local.json
