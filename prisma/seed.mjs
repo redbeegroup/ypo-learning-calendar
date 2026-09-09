@@ -15,6 +15,7 @@ const chapters = [
   { code: "PH", name: "Philippines", country: "Philippines" },
   { code: "PHG", name: "Philippines Gold", country: "Philippines" },
   { code: "VN", name: "Vietnam", country: "Vietnam" },
+  { code: "VNG", name: "Vietnam Gold", country: "Vietnam" },
   { code: "MM", name: "Myanmar", country: "Myanmar" },
   { code: "KH", name: "Cambodia", country: "Cambodia" },
 ];
