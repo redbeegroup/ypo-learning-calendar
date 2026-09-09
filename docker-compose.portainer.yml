@@ -11,7 +11,7 @@ name: ypo-lc
 
 services:
   app:
-    image: ${APP_IMAGE:?set APP_IMAGE, e.g. ghcr.io/<github-user>/ypo-lc:latest}
+    image: ${APP_IMAGE:-ghcr.io/redbeegroup/ypo-lc:latest}
     container_name: ypo-app
     restart: unless-stopped
     environment:
