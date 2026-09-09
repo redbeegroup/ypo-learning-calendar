@@ -49,6 +49,8 @@ type Props = {
   types: Option[];
   /** Chapter admins cannot change the host chapter. */
   lockedChapterId?: string;
+  /** Pre-selected chapter for new events (the admin's own chapter). */
+  defaultChapterId?: string;
   /** Present in edit mode. */
   event?: EventDto;
 };
@@ -140,13 +142,13 @@ const FIELD_MAP: Record<string, keyof FormValues> = {
   registrationClosesAt: "regClosesLocal",
 };
 
-export function EventForm({ chapters, types, lockedChapterId, event }: Props) {
+export function EventForm({ chapters, types, lockedChapterId, defaultChapterId, event }: Props) {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: toFormValues(event, {
-      chapterId: lockedChapterId ?? chapters[0]?.id ?? "",
+      chapterId: lockedChapterId ?? defaultChapterId ?? chapters[0]?.id ?? "",
       typeId: types[0]?.id ?? "",
     }),
   });

@@ -14,6 +14,7 @@ export default async function NewEventPage() {
         chapters={chapters}
         types={types}
         lockedChapterId={user.role === "SUPER_ADMIN" ? undefined : user.chapterId}
+        defaultChapterId={user.chapterId}
       />
     </div>
   );
