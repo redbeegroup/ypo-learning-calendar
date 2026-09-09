@@ -37,10 +37,10 @@ studio:
 	$(COMPOSE) exec -p 5555:5555 app npx prisma studio --port 5555 --hostname 0.0.0.0
 
 test:
-	$(APP) npx vitest run
+	$(APP) sh -c 'DATABASE_URL=$$DATABASE_URL_TEST npx vitest run'
 
 test-watch:
-	$(APP) npx vitest
+	$(APP) sh -c 'DATABASE_URL=$$DATABASE_URL_TEST npx vitest'
 
 lint:
 	$(APP) npm run lint

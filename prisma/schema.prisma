@@ -7,3 +7,157 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Role {
+  SUPER_ADMIN
+  CHAPTER_ADMIN
+  MEMBER
+}
+
+enum UserStatus {
+  INVITED
+  ACTIVE
+  DISABLED
+}
+
+enum Visibility {
+  LOCAL
+  REGIONAL
+  CHAPTER_SPECIFIC
+}
+
+enum PaymentType {
+  FREE
+  PAID
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+}
+
+enum RegistrationStatus {
+  REGISTERED
+  WAITLISTED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  NOT_REQUIRED
+  PENDING
+  PAID
+}
+
+model Chapter {
+  id        String   @id @default(cuid())
+  name      String
+  code      String   @unique
+  country   String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users        User[]
+  hostedEvents Event[]              @relation("HostChapter")
+  eventAccess  EventChapterAccess[]
+}
+
+model User {
+  id              String     @id @default(cuid())
+  email           String     @unique
+  name            String
+  passwordHash    String?
+  role            Role       @default(MEMBER)
+  status          UserStatus @default(INVITED)
+  chapterId       String
+  inviteToken     String?    @unique
+  inviteExpiresAt DateTime?
+  resetToken      String?    @unique
+  resetExpiresAt  DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  chapter       Chapter        @relation(fields: [chapterId], references: [id])
+  createdEvents Event[]        @relation("EventCreator")
+  registrations Registration[]
+
+  @@index([chapterId])
+}
+
+model EventType {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  color     String   @default("#2563eb")
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events Event[]
+}
+
+model Event {
+  id                   String      @id @default(cuid())
+  title                String
+  description          String      @default("")
+  hostChapterId        String
+  eventTypeId          String
+  startAt              DateTime
+  endAt                DateTime
+  timezone             String      @default("Asia/Singapore")
+  venue                String      @default("")
+  isOnline             Boolean     @default(false)
+  onlineUrl            String?
+  coverImageUrl        String?
+  visibility           Visibility  @default(REGIONAL)
+  capacity             Int?
+  registrationOpensAt  DateTime?
+  registrationClosesAt DateTime?
+  paymentType          PaymentType @default(FREE)
+  price                Decimal?    @db.Decimal(10, 2)
+  currency             String?
+  paymentInstructions  String?
+  paymentUrl           String?
+  status               EventStatus @default(DRAFT)
+  createdById          String
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  hostChapter   Chapter              @relation("HostChapter", fields: [hostChapterId], references: [id])
+  eventType     EventType            @relation(fields: [eventTypeId], references: [id])
+  createdBy     User                 @relation("EventCreator", fields: [createdById], references: [id])
+  chapterAccess EventChapterAccess[]
+  registrations Registration[]
+
+  @@index([startAt])
+  @@index([hostChapterId])
+  @@index([status])
+}
+
+model EventChapterAccess {
+  eventId   String
+  chapterId String
+
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, chapterId])
+}
+
+model Registration {
+  id            String             @id @default(cuid())
+  eventId       String
+  userId        String
+  status        RegistrationStatus @default(REGISTERED)
+  paymentStatus PaymentStatus      @default(NOT_REQUIRED)
+  registeredAt  DateTime           @default(now())
+  cancelledAt   DateTime?
+  updatedAt     DateTime           @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId, status])
+}
