@@ -7,8 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { api, ClientApiError } from "@/lib/api-client";
 import type { Attendee } from "@/server/services/registrations";
+import { formatInTimeZone } from "date-fns-tz";
 
-type Props = { rows: Attendee[]; paid: boolean; emptyText: string };
+type Props = { rows: Attendee[]; paid: boolean; emptyText: string; timezone: string };
 
 function PaymentCell({ row }: { row: Attendee }) {
   const router = useRouter();
@@ -46,7 +47,7 @@ function PaymentCell({ row }: { row: Attendee }) {
   );
 }
 
-export function RegistrationsTable({ rows, paid, emptyText }: Props) {
+export function RegistrationsTable({ rows, paid, emptyText, timezone }: Props) {
   return (
     <div className="overflow-x-auto rounded-lg border bg-card">
       <Table>
@@ -75,7 +76,7 @@ export function RegistrationsTable({ rows, paid, emptyText }: Props) {
               <TableCell>{r.user.email}</TableCell>
               <TableCell>{r.user.chapterName}</TableCell>
               <TableCell className="text-sm text-muted-foreground">
-                {new Date(r.registeredAt).toLocaleString("en-SG", { dateStyle: "medium", timeStyle: "short" })}
+                {formatInTimeZone(new Date(r.registeredAt), timezone, "d MMM yyyy, h:mm a")}
               </TableCell>
               {paid && (
                 <TableCell>

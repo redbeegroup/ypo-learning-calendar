@@ -56,16 +56,16 @@ export default async function EventRegistrationsPage({ params }: { params: Promi
 
       <section className="space-y-2">
         <h2 className="text-lg font-medium">Registered ({groups.registered.length})</h2>
-        <RegistrationsTable rows={groups.registered} paid={paid} emptyText="Nobody has registered yet." />
+        <RegistrationsTable rows={groups.registered} paid={paid} emptyText="Nobody has registered yet." timezone={event.timezone} />
       </section>
       <section className="space-y-2">
         <h2 className="text-lg font-medium">Waitlist ({groups.waitlisted.length})</h2>
-        <RegistrationsTable rows={groups.waitlisted} paid={paid} emptyText="The waitlist is empty." />
+        <RegistrationsTable rows={groups.waitlisted} paid={paid} emptyText="The waitlist is empty." timezone={event.timezone} />
       </section>
       {groups.cancelled.length > 0 && (
         <section className="space-y-2">
           <h2 className="text-lg font-medium text-muted-foreground">Cancelled ({groups.cancelled.length})</h2>
-          <RegistrationsTable rows={groups.cancelled} paid={paid} emptyText="" />
+          <RegistrationsTable rows={groups.cancelled} paid={paid} emptyText="" timezone={event.timezone} />
         </section>
       )}
     </div>
