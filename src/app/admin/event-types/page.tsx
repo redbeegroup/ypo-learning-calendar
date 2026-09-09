@@ -29,17 +29,8 @@ export default async function EventTypesPage() {
         { name: "sortOrder", label: "Sort order", type: "number" },
       ]}
       columns={[
-        {
-          key: "name",
-          label: "Name",
-          render: (r) => (
-            <span className="flex items-center gap-2">
-              <span className="inline-block h-3 w-3 rounded-sm" style={{ backgroundColor: String(r.color) }} />
-              {String(r.name)}
-            </span>
-          ),
-        },
-        { key: "color", label: "Colour" },
+        { key: "name", label: "Name" },
+        { key: "color", label: "Colour", kind: "color" },
         { key: "sortOrder", label: "Order" },
       ]}
     />

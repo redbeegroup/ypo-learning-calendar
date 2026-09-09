@@ -19,7 +19,7 @@ type Props = {
   endpoint: string; // e.g. "/chapters"
   fields: Field[];
   rows: CatalogRow[];
-  columns: { key: string; label: string; render?: (row: CatalogRow) => React.ReactNode }[];
+  columns: { key: string; label: string; kind?: "text" | "color" }[];
 };
 
 function EntityDialog({
@@ -159,7 +159,16 @@ export function CatalogTable({ title, singular, endpoint, fields, rows, columns 
             {rows.map((r) => (
               <TableRow key={r.id} className={r.isActive ? undefined : "opacity-60"}>
                 {columns.map((c) => (
-                  <TableCell key={c.key}>{c.render ? c.render(r) : String(r[c.key] ?? "")}</TableCell>
+                  <TableCell key={c.key}>
+                    {c.kind === "color" ? (
+                      <span className="flex items-center gap-2">
+                        <span className="inline-block h-3 w-3 rounded-sm" style={{ backgroundColor: String(r[c.key]) }} />
+                        {String(r[c.key] ?? "")}
+                      </span>
+                    ) : (
+                      String(r[c.key] ?? "")
+                    )}
+                  </TableCell>
                 ))}
                 <TableCell className="text-sm text-muted-foreground">{r.usage}</TableCell>
                 <TableCell>
