@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1
-FROM node:22-alpine AS base
-RUN apk add --no-cache libc6-compat openssl
+# Debian-based image: Next.js's native SWC binary crashes with SIGBUS on Alpine/musl under Docker Desktop.
+FROM node:22-bookworm-slim AS base
+RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates curl \
+  && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 # ---------- dev: source is bind-mounted, deps live in a named volume ----------
@@ -28,7 +30,7 @@ FROM base AS prod
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
-RUN addgroup -S app && adduser -S app -G app
+RUN groupadd --system app && useradd --system --gid app --create-home app
 COPY --from=build --chown=app:app /app/.next/standalone ./
 COPY --from=build --chown=app:app /app/.next/static ./.next/static
 COPY --from=build --chown=app:app /app/public ./public

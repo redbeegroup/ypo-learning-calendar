@@ -6,7 +6,7 @@
 
 **Architecture:** One `Dockerfile` with `dev` and `prod` targets. `docker-compose.yml` runs the dev target with the source bind-mounted and `node_modules` in a named volume. A `Makefile` wraps every command so nothing runs on the host. The entrypoint runs Prisma migrations before starting the app.
 
-**Tech Stack:** Docker Compose, node:22-alpine, Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4, shadcn/ui, Prisma 6, PostgreSQL 16, Mailpit, Vitest.
+**Tech Stack:** Docker Compose, node:22-bookworm-slim (Alpine was tried first and `next dev` crashed with SIGBUS on its musl SWC binary), Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4, shadcn/ui, Prisma 6, PostgreSQL 16, Mailpit, Vitest.
 
 Spec: `docs/superpowers/specs/2026-09-09-learning-calendar-design.md`
 
