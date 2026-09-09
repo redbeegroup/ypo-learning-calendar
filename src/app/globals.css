@@ -75,3 +75,23 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* FullCalendar in the blue theme */
+.fc {
+  --fc-button-bg-color: var(--primary);
+  --fc-button-border-color: var(--primary);
+  --fc-button-hover-bg-color: oklch(0.48 0.22 262);
+  --fc-button-hover-border-color: oklch(0.48 0.22 262);
+  --fc-button-active-bg-color: oklch(0.42 0.2 262);
+  --fc-button-active-border-color: oklch(0.42 0.2 262);
+  --fc-today-bg-color: oklch(0.95 0.03 255);
+  --fc-border-color: var(--border);
+  font-size: 0.875rem;
+}
+.fc .fc-toolbar-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.fc .fc-event {
+  cursor: pointer;
+}

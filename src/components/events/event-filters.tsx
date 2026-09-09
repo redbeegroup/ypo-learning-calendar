@@ -19,11 +19,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RANGE_OPTIONS } from "@/lib/event-query";
 
 type Option = { id: string; name: string };
-type Props = { chapters: Option[]; types: Option[]; showStatus?: boolean };
+type Props = { chapters: Option[]; types: Option[]; showStatus?: boolean; hideRange?: boolean };
 
 const FILTER_KEYS = ["q", "chapterIds", "typeIds", "payment", "registrableOnly", "range", "status"];
 
-export function EventFilters({ chapters, types, showStatus }: Props) {
+export function EventFilters({ chapters, types, showStatus, hideRange }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -118,21 +118,23 @@ export function EventFilters({ chapters, types, showStatus }: Props) {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Select
-          value={params.get("range") ?? "upcoming"}
-          onValueChange={(v) => update({ range: v === "upcoming" ? undefined : v })}
-        >
-          <SelectTrigger className="h-8 w-[150px] text-sm" aria-label="Date range">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {RANGE_OPTIONS.map((r) => (
-              <SelectItem key={r.value} value={r.value}>
-                {r.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {!hideRange && (
+          <Select
+            value={params.get("range") ?? "upcoming"}
+            onValueChange={(v) => update({ range: v === "upcoming" ? undefined : v })}
+          >
+            <SelectTrigger className="h-8 w-[150px] text-sm" aria-label="Date range">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {RANGE_OPTIONS.map((r) => (
+                <SelectItem key={r.value} value={r.value}>
+                  {r.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
 
         <Select value={params.get("payment") ?? "ALL"} onValueChange={(v) => update({ payment: v === "ALL" ? undefined : v })}>
           <SelectTrigger className="h-8 w-[130px] text-sm" aria-label="Payment">
