@@ -58,31 +58,35 @@ model Chapter {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users        User[]
-  hostedEvents Event[]              @relation("HostChapter")
-  eventAccess  EventChapterAccess[]
+  users          User[]               @relation("PrimaryChapter")
+  secondaryUsers User[]               @relation("SecondaryChapter")
+  hostedEvents   Event[]              @relation("HostChapter")
+  eventAccess    EventChapterAccess[]
 }
 
 model User {
-  id              String     @id @default(cuid())
-  email           String     @unique
-  name            String
-  passwordHash    String?
-  role            Role       @default(MEMBER)
-  status          UserStatus @default(INVITED)
-  chapterId       String
-  inviteToken     String?    @unique
-  inviteExpiresAt DateTime?
-  resetToken      String?    @unique
-  resetExpiresAt  DateTime?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  id                 String     @id @default(cuid())
+  email              String     @unique
+  name               String
+  passwordHash       String?
+  role               Role       @default(MEMBER)
+  status             UserStatus @default(INVITED)
+  chapterId          String
+  secondaryChapterId String?
+  inviteToken        String?    @unique
+  inviteExpiresAt    DateTime?
+  resetToken         String?    @unique
+  resetExpiresAt     DateTime?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
 
-  chapter       Chapter        @relation(fields: [chapterId], references: [id])
-  createdEvents Event[]        @relation("EventCreator")
-  registrations Registration[]
+  chapter          Chapter        @relation("PrimaryChapter", fields: [chapterId], references: [id])
+  secondaryChapter Chapter?       @relation("SecondaryChapter", fields: [secondaryChapterId], references: [id])
+  createdEvents    Event[]        @relation("EventCreator")
+  registrations    Registration[]
 
   @@index([chapterId])
+  @@index([secondaryChapterId])
 }
 
 model EventType {

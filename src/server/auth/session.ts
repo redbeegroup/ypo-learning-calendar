@@ -15,6 +15,8 @@ export type SessionUser = {
   role: Role;
   chapterId: string;
   chapterName: string;
+  secondaryChapterId: string | null;
+  secondaryChapterName: string | null;
 };
 
 export function extractToken(req: NextRequest): string | null {
@@ -29,7 +31,7 @@ export async function loadSessionUser(token: string | null): Promise<SessionUser
   if (!payload) return null;
   const user = await prisma.user.findUnique({
     where: { id: payload.sub },
-    include: { chapter: { select: { name: true } } },
+    include: { chapter: { select: { name: true } }, secondaryChapter: { select: { name: true } } },
   });
   if (!user || user.status !== "ACTIVE") return null;
   return {
@@ -39,6 +41,8 @@ export async function loadSessionUser(token: string | null): Promise<SessionUser
     role: user.role,
     chapterId: user.chapterId,
     chapterName: user.chapter.name,
+    secondaryChapterId: user.secondaryChapterId,
+    secondaryChapterName: user.secondaryChapter?.name ?? null,
   };
 }
 

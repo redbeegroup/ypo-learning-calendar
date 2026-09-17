@@ -13,6 +13,7 @@ const sgAdmin: Actor = { id: "u2", role: "CHAPTER_ADMIN", chapterId: "sg" };
 const myAdmin: Actor = { id: "u3", role: "CHAPTER_ADMIN", chapterId: "my" };
 const sgMember: Actor = { id: "u4", role: "MEMBER", chapterId: "sg" };
 const myMember: Actor = { id: "u5", role: "MEMBER", chapterId: "my" };
+const dualMember: Actor = { id: "u6", role: "MEMBER", chapterId: "my", secondaryChapterId: "sg" };
 
 describe("isAdmin", () => {
   it("is true for both admin roles only", () => {
@@ -81,6 +82,15 @@ describe("canRegisterForEvent", () => {
     expect(canRegisterForEvent(myMember, ev, now)).toEqual({ ok: true });
     expect(canRegisterForEvent(sgMember, ev, now)).toEqual({ ok: false, reason: "NOT_IN_SCOPE" });
   });
+  it("secondary chapter counts for local and chapter-specific events", () => {
+    const local = { ...base, visibility: "LOCAL" as const };
+    expect(canRegisterForEvent(dualMember, local, now)).toEqual({ ok: true });
+    const specific = { ...base, visibility: "CHAPTER_SPECIFIC" as const, accessChapterIds: ["sg"] };
+    expect(canRegisterForEvent(dualMember, specific, now)).toEqual({ ok: true });
+    const other = { ...base, visibility: "CHAPTER_SPECIFIC" as const, accessChapterIds: ["th"] };
+    expect(canRegisterForEvent(dualMember, other, now)).toEqual({ ok: false, reason: "NOT_IN_SCOPE" });
+  });
+
   it("rejects unpublished events", () => {
     expect(canRegisterForEvent(sgMember, { ...base, status: "DRAFT" }, now)).toEqual({
       ok: false,

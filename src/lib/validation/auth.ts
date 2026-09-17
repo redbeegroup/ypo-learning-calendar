@@ -29,12 +29,23 @@ export const changePasswordSchema = z.object({
   newPassword: passwordSchema,
 });
 
-export const inviteUserSchema = z.object({
-  email: z.string().email().transform((e) => e.toLowerCase()),
-  name: z.string().min(1).max(120),
-  chapterId: z.string().min(1),
-  role: z.enum(["SUPER_ADMIN", "CHAPTER_ADMIN", "MEMBER"]).default("MEMBER"),
-});
+export const inviteUserSchema = z
+  .object({
+    email: z.string().email().transform((e) => e.toLowerCase()),
+    name: z.string().min(1).max(120),
+    chapterId: z.string().min(1),
+    secondaryChapterId: z
+      .string()
+      .min(1)
+      .nullable()
+      .optional()
+      .transform((v) => v || null),
+    role: z.enum(["SUPER_ADMIN", "CHAPTER_ADMIN", "MEMBER"]).default("MEMBER"),
+  })
+  .refine((v) => v.secondaryChapterId !== v.chapterId, {
+    path: ["secondaryChapterId"],
+    message: "Secondary chapter must differ from the primary chapter",
+  });
 
 export type LoginInput = z.infer<typeof loginSchema>;
 export type InviteUserInput = z.infer<typeof inviteUserSchema>;

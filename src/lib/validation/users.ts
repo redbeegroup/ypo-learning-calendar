@@ -7,10 +7,16 @@ export const updateUserSchema = z
   .object({
     name: z.string().trim().min(1).max(120).optional(),
     chapterId: z.string().min(1).optional(),
+    /** undefined = unchanged, null = clear. */
+    secondaryChapterId: z.string().min(1).nullable().optional(),
     role: z.enum(ROLES).optional(),
     status: z.enum(["ACTIVE", "DISABLED"]).optional(),
   })
-  .refine((v) => Object.keys(v).length > 0, { message: "Nothing to update" });
+  .refine((v) => Object.keys(v).length > 0, { message: "Nothing to update" })
+  .refine((v) => !v.chapterId || !v.secondaryChapterId || v.chapterId !== v.secondaryChapterId, {
+    path: ["secondaryChapterId"],
+    message: "Secondary chapter must differ from the primary chapter",
+  });
 
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 

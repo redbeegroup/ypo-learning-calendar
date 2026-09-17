@@ -21,6 +21,7 @@ export async function inviteUser(actor: Actor, input: InviteUserInput) {
   if (!canManageUser(actor, { chapterId: input.chapterId, role: input.role as Role })) forbidden();
   const chapter = await prisma.chapter.findUnique({ where: { id: input.chapterId } });
   if (!chapter) throw new ApiError(400, "VALIDATION", "Unknown chapter", { chapterId: ["Unknown chapter"] });
+  await assertSecondaryChapter(input.secondaryChapterId, input.chapterId);
   const existing = await prisma.user.findUnique({ where: { email: input.email } });
   if (existing) throw new ApiError(409, "EMAIL_TAKEN", "A user with this email already exists");
 
@@ -30,6 +31,7 @@ export async function inviteUser(actor: Actor, input: InviteUserInput) {
       email: input.email,
       name: input.name,
       chapterId: input.chapterId,
+      secondaryChapterId: input.secondaryChapterId,
       role: input.role,
       status: "INVITED",
       inviteToken: token,
@@ -83,12 +85,24 @@ export async function resetPassword(token: string, password: string) {
   });
 }
 
+async function assertSecondaryChapter(secondaryChapterId: string | null | undefined, primaryChapterId: string) {
+  if (!secondaryChapterId) return;
+  if (secondaryChapterId === primaryChapterId) {
+    throw new ApiError(400, "VALIDATION", "Invalid input", {
+      secondaryChapterId: ["Secondary chapter must differ from the primary chapter"],
+    });
+  }
+  const chapter = await prisma.chapter.findUnique({ where: { id: secondaryChapterId } });
+  if (!chapter) throw new ApiError(400, "VALIDATION", "Unknown chapter", { secondaryChapterId: ["Unknown chapter"] });
+}
+
 export function publicUser(user: {
   id: string;
   email: string;
   name: string;
   role: Role;
   chapterId: string;
+  secondaryChapterId?: string | null;
   status?: string;
 }) {
   return {
@@ -97,6 +111,7 @@ export function publicUser(user: {
     name: user.name,
     role: user.role,
     chapterId: user.chapterId,
+    secondaryChapterId: user.secondaryChapterId ?? null,
     status: user.status,
   };
 }
@@ -108,9 +123,11 @@ const userSelect = {
   role: true,
   status: true,
   chapterId: true,
+  secondaryChapterId: true,
   createdAt: true,
   inviteExpiresAt: true,
   chapter: { select: { name: true } },
+  secondaryChapter: { select: { name: true } },
 } satisfies Prisma.UserSelect;
 
 export type AdminUser = {
@@ -121,6 +138,8 @@ export type AdminUser = {
   status: "INVITED" | "ACTIVE" | "DISABLED";
   chapterId: string;
   chapterName: string;
+  secondaryChapterId: string | null;
+  secondaryChapterName: string | null;
   createdAt: string;
   inviteExpired: boolean;
 };
@@ -134,6 +153,8 @@ function toAdminUser(u: Prisma.UserGetPayload<{ select: typeof userSelect }>): A
     status: u.status,
     chapterId: u.chapterId,
     chapterName: u.chapter.name,
+    secondaryChapterId: u.secondaryChapterId,
+    secondaryChapterName: u.secondaryChapter?.name ?? null,
     createdAt: u.createdAt.toISOString(),
     inviteExpired: u.status === "INVITED" && !!u.inviteExpiresAt && u.inviteExpiresAt < new Date(),
   };
@@ -142,16 +163,21 @@ function toAdminUser(u: Prisma.UserGetPayload<{ select: typeof userSelect }>): A
 export async function listUsers(actor: Actor, q: UserListQuery) {
   if (actor.role === "MEMBER") forbidden();
   const where: Prisma.UserWhereInput = {};
-  if (actor.role === "CHAPTER_ADMIN") where.chapterId = actor.chapterId;
-  else if (q.chapterId) where.chapterId = q.chapterId;
+  const and: Prisma.UserWhereInput[] = [];
+  // A chapter admin sees everyone whose primary or secondary chapter is theirs; they can only manage primary members.
+  const scopeChapter = actor.role === "CHAPTER_ADMIN" ? actor.chapterId : q.chapterId;
+  if (scopeChapter) and.push({ OR: [{ chapterId: scopeChapter }, { secondaryChapterId: scopeChapter }] });
   if (q.role) where.role = q.role;
   if (q.status) where.status = q.status;
   if (q.q) {
-    where.OR = [
-      { name: { contains: q.q, mode: "insensitive" } },
-      { email: { contains: q.q, mode: "insensitive" } },
-    ];
+    and.push({
+      OR: [
+        { name: { contains: q.q, mode: "insensitive" } },
+        { email: { contains: q.q, mode: "insensitive" } },
+      ],
+    });
   }
+  if (and.length) where.AND = and;
   const [total, rows] = await Promise.all([
     prisma.user.count({ where }),
     prisma.user.findMany({
@@ -181,12 +207,20 @@ export async function updateUser(actor: Actor, userId: string, input: UpdateUser
     const chapter = await prisma.chapter.findUnique({ where: { id: input.chapterId } });
     if (!chapter) throw new ApiError(400, "VALIDATION", "Unknown chapter", { chapterId: ["Unknown chapter"] });
   }
+  const nextSecondary = input.secondaryChapterId === undefined ? user.secondaryChapterId : input.secondaryChapterId;
+  await assertSecondaryChapter(nextSecondary, target.chapterId);
   let status = user.status;
   if (input.status === "DISABLED") status = "DISABLED";
   else if (input.status === "ACTIVE") status = user.passwordHash ? "ACTIVE" : "INVITED";
   const updated = await prisma.user.update({
     where: { id: userId },
-    data: { name: input.name, chapterId: input.chapterId, role: input.role, status },
+    data: {
+      name: input.name,
+      chapterId: input.chapterId,
+      secondaryChapterId: input.secondaryChapterId,
+      role: input.role,
+      status,
+    },
     select: userSelect,
   });
   return toAdminUser(updated);

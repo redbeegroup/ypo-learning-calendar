@@ -1,7 +1,14 @@
 import { Prisma, type Chapter, type EventStatus } from "@prisma/client";
 import { prisma } from "@/server/db";
 import { ApiError, forbidden, notFound } from "@/server/api";
-import { canManageEvent, canRegisterForEvent, isAdmin, type Actor, type RegisterCheck } from "@/server/permissions";
+import {
+  actorChapterIds,
+  canManageEvent,
+  canRegisterForEvent,
+  isAdmin,
+  type Actor,
+  type RegisterCheck,
+} from "@/server/permissions";
 import { promoteWaitlist, sendPromotionEmails } from "@/server/services/waitlist";
 import type { EventInput, EventListQuery } from "@/lib/validation/events";
 
@@ -218,8 +225,8 @@ export async function listEvents(actor: Actor, q: EventListQuery) {
     and.push({
       OR: [
         { visibility: "REGIONAL" },
-        { visibility: "LOCAL", hostChapterId: actor.chapterId },
-        { visibility: "CHAPTER_SPECIFIC", chapterAccess: { some: { chapterId: actor.chapterId } } },
+        { visibility: "LOCAL", hostChapterId: { in: actorChapterIds(actor) } },
+        { visibility: "CHAPTER_SPECIFIC", chapterAccess: { some: { chapterId: { in: actorChapterIds(actor) } } } },
       ],
     });
   }

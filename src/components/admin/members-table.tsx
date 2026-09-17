@@ -40,7 +40,8 @@ function StatusBadge({ user }: { user: AdminUser }) {
   return <Badge variant="secondary">{user.inviteExpired ? "Invite expired" : "Invited"}</Badge>;
 }
 
-type FormState = { email: string; name: string; chapterId: string; role: Role };
+type FormState = { email: string; name: string; chapterId: string; secondaryChapterId: string; role: Role };
+const NONE = "NONE";
 
 function UserDialog({
   open,
@@ -61,6 +62,7 @@ function UserDialog({
     email: user?.email ?? "",
     name: user?.name ?? "",
     chapterId: user?.chapterId ?? actor.chapterId,
+    secondaryChapterId: user?.secondaryChapterId ?? NONE,
     role: user?.role ?? "MEMBER",
   });
   const [busy, setBusy] = useState(false);
@@ -71,13 +73,14 @@ function UserDialog({
     setBusy(true);
     setError(null);
     try {
+      const secondaryChapterId = form.secondaryChapterId === NONE ? null : form.secondaryChapterId;
       if (user) {
         await api(`/users/${user.id}`, {
           method: "PATCH",
-          json: { name: form.name, chapterId: form.chapterId, role: form.role },
+          json: { name: form.name, chapterId: form.chapterId, secondaryChapterId, role: form.role },
         });
       } else {
-        await api("/users", { method: "POST", json: form });
+        await api("/users", { method: "POST", json: { ...form, secondaryChapterId } });
       }
       onOpenChange(false);
       router.refresh();
@@ -117,20 +120,41 @@ function UserDialog({
             <Label htmlFor="name">Name</Label>
             <Input id="name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           </div>
-          <div className="space-y-1">
-            <Label>Chapter</Label>
-            <Select value={form.chapterId} onValueChange={(v) => setForm({ ...form, chapterId: v })} disabled={!isSuper}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {chapters.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
-                    {c.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1">
+              <Label>Primary chapter</Label>
+              <Select value={form.chapterId} onValueChange={(v) => setForm({ ...form, chapterId: v })} disabled={!isSuper}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {chapters.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label>Secondary chapter</Label>
+              <Select value={form.secondaryChapterId} onValueChange={(v) => setForm({ ...form, secondaryChapterId: v })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={NONE}>None</SelectItem>
+                  {chapters
+                    .filter((c) => c.id !== form.chapterId)
+                    .map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">Members can register for events open to either chapter.</p>
+            </div>
           </div>
           <div className="space-y-1">
             <Label>Role</Label>
@@ -240,7 +264,7 @@ export function MembersTable({ users, chapters, actor }: Props) {
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Chapter</TableHead>
+              <TableHead>Chapters</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -258,7 +282,12 @@ export function MembersTable({ users, chapters, actor }: Props) {
               <TableRow key={u.id} className={u.status === "DISABLED" ? "opacity-60" : undefined}>
                 <TableCell className="font-medium">{u.name}</TableCell>
                 <TableCell>{u.email}</TableCell>
-                <TableCell>{u.chapterName}</TableCell>
+                <TableCell>
+                  {u.chapterName}
+                  {u.secondaryChapterName && (
+                    <span className="block text-xs text-muted-foreground">+ {u.secondaryChapterName}</span>
+                  )}
+                </TableCell>
                 <TableCell>{ROLE_LABEL[u.role]}</TableCell>
                 <TableCell>
                   <StatusBadge user={u} />

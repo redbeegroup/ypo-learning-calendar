@@ -16,13 +16,15 @@ export default async function ProfilePage() {
           <dd>{user.name}</dd>
           <dt className="text-muted-foreground">Email</dt>
           <dd>{user.email}</dd>
-          <dt className="text-muted-foreground">Chapter</dt>
+          <dt className="text-muted-foreground">Primary chapter</dt>
           <dd>{user.chapterName}</dd>
+          <dt className="text-muted-foreground">Secondary chapter</dt>
+          <dd>{user.secondaryChapterName ?? "—"}</dd>
           <dt className="text-muted-foreground">Role</dt>
           <dd>{ROLE_LABEL[user.role]}</dd>
         </dl>
         <p className="text-xs text-muted-foreground">
-          To change your name or chapter, contact your chapter administrator.
+          To change your name or chapters, contact your chapter administrator.
         </p>
       </section>
       <section className="space-y-3">

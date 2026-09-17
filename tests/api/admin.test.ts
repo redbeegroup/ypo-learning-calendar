@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { GET as listUsers } from "@/app/api/v1/users/route";
+import { GET as listUsers, POST as inviteUser } from "@/app/api/v1/users/route";
 import { PATCH as patchUser } from "@/app/api/v1/users/[id]/route";
 import { POST as resendInvite } from "@/app/api/v1/users/[id]/resend-invite/route";
 import { GET as getChapters, POST as postChapter } from "@/app/api/v1/chapters/route";
@@ -57,6 +57,33 @@ describe("users admin", () => {
     expect((await disable.json()).data.status).toBe("DISABLED");
     const enable = await patchUser(jsonRequest(`/api/v1/users/${w.invited.id}`, "PATCH", { status: "ACTIVE" }, superTok), p(w.invited.id));
     expect((await enable.json()).data.status).toBe("INVITED");
+  });
+
+  it("supports a secondary chapter on invite and update", async () => {
+    const w = await world();
+    const superTok = await w.t(w.superAdmin);
+    const same = await inviteUser(
+      jsonRequest("/api/v1/users", "POST", { email: "dual@x.com", name: "Dual", chapterId: w.sg.id, secondaryChapterId: w.sg.id }, superTok),
+      noParams,
+    );
+    expect(same.status).toBe(400);
+    expect((await same.json()).error.fields.secondaryChapterId).toBeDefined();
+
+    const ok = await inviteUser(
+      jsonRequest("/api/v1/users", "POST", { email: "dual@x.com", name: "Dual", chapterId: w.my.id, secondaryChapterId: w.sg.id }, superTok),
+      noParams,
+    );
+    expect(ok.status).toBe(201);
+    const dual = (await ok.json()).data;
+    expect(dual.secondaryChapterId).toBe(w.sg.id);
+
+    // The Singapore chapter admin sees the member (secondary chapter) but cannot manage them (primary is Malaysia).
+    expect(await emails(await listUsers(jsonRequest("/api/v1/users", "GET", undefined, await w.t(w.sgAdmin)), noParams))).toContain("dual@x.com");
+    expect((await patchUser(jsonRequest(`/api/v1/users/${dual.id}`, "PATCH", { name: "X" }, await w.t(w.sgAdmin)), p(dual.id))).status).toBe(403);
+
+    const cleared = await patchUser(jsonRequest(`/api/v1/users/${dual.id}`, "PATCH", { secondaryChapterId: null }, superTok), p(dual.id));
+    expect(cleared.status).toBe(200);
+    expect((await cleared.json()).data.secondaryChapterName).toBeNull();
   });
 
   it("resends invites only to invited users", async () => {

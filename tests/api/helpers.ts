@@ -23,6 +23,7 @@ export async function createUser(opts: {
   email: string;
   role?: Role;
   chapterId: string;
+  secondaryChapterId?: string;
   password?: string;
   status?: "ACTIVE" | "INVITED" | "DISABLED";
 }) {
@@ -32,6 +33,7 @@ export async function createUser(opts: {
       name: opts.email.split("@")[0],
       role: opts.role ?? "MEMBER",
       chapterId: opts.chapterId,
+      secondaryChapterId: opts.secondaryChapterId,
       status: opts.status ?? "ACTIVE",
       passwordHash: opts.password ? await hashPassword(opts.password) : null,
     },

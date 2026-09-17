@@ -1,6 +1,11 @@
 import type { Role, Visibility, EventStatus } from "@prisma/client";
 
-export type Actor = { id: string; role: Role; chapterId: string };
+export type Actor = { id: string; role: Role; chapterId: string; secondaryChapterId?: string | null };
+
+/** Primary chapter plus the optional secondary chapter. */
+export function actorChapterIds(actor: Pick<Actor, "chapterId" | "secondaryChapterId">): string[] {
+  return actor.secondaryChapterId ? [actor.chapterId, actor.secondaryChapterId] : [actor.chapterId];
+}
 
 export type EventScope = {
   status: EventStatus;
@@ -36,16 +41,16 @@ export function canManageUser(actor: Actor, target: { chapterId: string; role: R
 }
 
 export function isInRegistrationScope(
-  actor: Pick<Actor, "chapterId">,
+  actor: Pick<Actor, "chapterId" | "secondaryChapterId">,
   event: Pick<EventScope, "hostChapterId" | "visibility" | "accessChapterIds">,
 ): boolean {
   switch (event.visibility) {
     case "REGIONAL":
       return true;
     case "LOCAL":
-      return actor.chapterId === event.hostChapterId;
+      return actorChapterIds(actor).includes(event.hostChapterId);
     case "CHAPTER_SPECIFIC":
-      return event.accessChapterIds.includes(actor.chapterId);
+      return actorChapterIds(actor).some((id) => event.accessChapterIds.includes(id));
   }
 }
 
