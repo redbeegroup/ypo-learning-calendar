@@ -23,14 +23,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="flex min-h-screen">
-      <aside className="hidden w-60 shrink-0 flex-col bg-sidebar text-sidebar-foreground md:flex">
+      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col bg-sidebar text-sidebar-foreground md:flex">
         <div className="border-b border-sidebar-border px-4 py-4">
           <div className="font-semibold">YPO SEA Learning</div>
           <div className="text-xs text-blue-200">
             Admin · {user.role === "SUPER_ADMIN" ? "All chapters" : user.chapterName}
           </div>
         </div>
-        <nav className="flex-1 space-y-1 p-2">
+        <nav className="flex-1 space-y-1 overflow-y-auto p-2">
           {nav.map((n) => (
             <Link
               key={n.href}
