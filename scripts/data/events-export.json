@@ -156,7 +156,7 @@
  "events": [
   {
    "title": "VNG Data Center Visit & The Future of AI",
-   "description": "**Event chair(s):** Mr. Minh Le, Mr. Hoai Luong\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Learning",
    "startAt": "2026-08-18T06:30:00.000Z",
@@ -179,11 +179,44 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Minh Le",
+    "Mr. Hoai Luong"
+   ],
+   "resources": [
+    {
+     "bio": "Head of Infrastructure at VNG. Leads the data-centre and cloud platform teams.",
+     "name": "Nguyen Van Minh",
+     "photoUrl": "https://i.pravatar.cc/160?img=68"
+    }
+   ],
+   "agenda": [
+    {
+     "time": "13:30",
+     "title": "Arrival at VNG campus",
+     "description": ""
+    },
+    {
+     "time": "13:45",
+     "title": "Data-centre tour",
+     "description": "Small groups, closed shoes required"
+    },
+    {
+     "time": "15:00",
+     "title": "Talk: The future of AI infrastructure in Vietnam",
+     "description": "Nguyen Van Minh"
+    },
+    {
+     "time": "16:00",
+     "title": "Q&A and networking coffee",
+     "description": ""
+    }
+   ],
    "status": "PUBLISHED"
   },
   {
    "title": "Chapter Assembly",
-   "description": "**Event chair(s):** Mr. Peter Mach, Mr. Nghia Luong\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Social",
    "startAt": "2026-08-22T07:00:00.000Z",
@@ -206,11 +239,17 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Peter Mach",
+    "Mr. Nghia Luong"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "YPO Children Series No.1: Growing Up in the Age of AI with Justine Mach",
-   "description": "**Event chair(s):** Ms. Justine Mach\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Family",
    "startAt": "2026-08-23T02:00:00.000Z",
@@ -233,11 +272,16 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Ms. Justine Mach"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "Untold Story No. 13 - Mr. Tran Ba Duong",
-   "description": "**Event chair(s):** Mr. Tin Mai\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Untold Story",
    "startAt": "2026-09-04T01:30:00.000Z",
@@ -260,11 +304,16 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Tin Mai"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "The Bridge Room Ep.1: How To Reach Vietnam's Digital Consumers",
-   "description": "**Event chair(s):** Mr. Tuan Anh\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Bridge Room",
    "startAt": "2026-09-08T11:00:00.000Z",
@@ -287,11 +336,48 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Tuan Anh"
+   ],
+   "resources": [
+    {
+     "bio": "Chief Marketing Officer of a leading Vietnamese e-commerce platform.",
+     "name": "Tran Thi Mai",
+     "photoUrl": "https://i.pravatar.cc/160?img=49"
+    },
+    {
+     "bio": "Country head of a global digital advertising group.",
+     "name": "James Whitfield",
+     "photoUrl": "https://i.pravatar.cc/160?img=7"
+    }
+   ],
+   "agenda": [
+    {
+     "time": "18:00",
+     "title": "Registration & drinks",
+     "description": ""
+    },
+    {
+     "time": "18:30",
+     "title": "Panel: How Vietnam's digital consumer really buys",
+     "description": "Tran Thi Mai and James Whitfield"
+    },
+    {
+     "time": "19:45",
+     "title": "Dinner",
+     "description": ""
+    },
+    {
+     "time": "21:00",
+     "title": "Close",
+     "description": ""
+    }
+   ],
    "status": "PUBLISHED"
   },
   {
    "title": "Forum Moderators Meeting & Dinner",
-   "description": "**Event chair(s):** Mr. Cuong Nguyen\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Forum",
    "startAt": "2026-09-15T11:00:00.000Z",
@@ -314,6 +400,11 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Cuong Nguyen"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
@@ -338,6 +429,44 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Marcus Lim",
+    "Ms. Rachel Ong"
+   ],
+   "resources": [
+    {
+     "bio": "Co-founder of a Singapore fintech that expanded to five markets in three years. Angel investor and YPO Singapore member.",
+     "name": "Serena Koh",
+     "photoUrl": "https://i.pravatar.cc/160?img=32"
+    },
+    {
+     "bio": "Regional MD for a global consumer brand; led market entry into India and the Middle East.",
+     "name": "Arun Mehta",
+     "photoUrl": "https://i.pravatar.cc/160?img=12"
+    }
+   ],
+   "agenda": [
+    {
+     "time": "18:30",
+     "title": "Arrival & cocktails",
+     "description": ""
+    },
+    {
+     "time": "19:00",
+     "title": "Fireside chat: What breaks first when you go global",
+     "description": "Serena Koh with Arun Mehta"
+    },
+    {
+     "time": "20:00",
+     "title": "Dinner & table discussions",
+     "description": "One question per table, moderated by forum members"
+    },
+    {
+     "time": "21:45",
+     "title": "Closing",
+     "description": ""
+    }
+   ],
    "status": "PUBLISHED"
   },
   {
@@ -362,6 +491,38 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Ms. Maria Santos"
+   ],
+   "resources": [
+    {
+     "bio": "AI researcher and advisor to family-owned manufacturers in Japan and the Philippines. Author of *Practical AI for the Boardroom*.",
+     "name": "Dr. Kenji Watanabe",
+     "photoUrl": "https://i.pravatar.cc/160?img=53"
+    }
+   ],
+   "agenda": [
+    {
+     "time": "16:00",
+     "title": "Welcome & housekeeping",
+     "description": ""
+    },
+    {
+     "time": "16:05",
+     "title": "Where AI actually saves money in a family business",
+     "description": "Dr. Kenji Watanabe"
+    },
+    {
+     "time": "16:50",
+     "title": "Live Q&A",
+     "description": "Submit questions in the chat"
+    },
+    {
+     "time": "17:25",
+     "title": "Wrap-up & resources",
+     "description": ""
+    }
+   ],
    "status": "PUBLISHED"
   },
   {
@@ -389,11 +550,69 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Somchai Prasert",
+    "Mr. Tuan Anh"
+   ],
+   "resources": [
+    {
+     "bio": "Founder of a Thai agritech exporter; YPO Thailand learning chair 2024–25.",
+     "name": "Nattaya Chai",
+     "photoUrl": "https://i.pravatar.cc/160?img=25"
+    },
+    {
+     "bio": "Serial founder in Ho Chi Minh City, most recently in cross-border e-commerce logistics.",
+     "name": "Le Hoang Nam",
+     "photoUrl": "https://i.pravatar.cc/160?img=60"
+    },
+    {
+     "bio": "Partner at a Bangkok-based growth fund investing across Thailand and Vietnam.",
+     "name": "Priya Raman",
+     "photoUrl": null
+    }
+   ],
+   "agenda": [
+    {
+     "time": "09:00",
+     "title": "Registration & breakfast",
+     "description": ""
+    },
+    {
+     "time": "09:30",
+     "title": "Opening: Two markets, one playbook?",
+     "description": "Chairs"
+    },
+    {
+     "time": "10:00",
+     "title": "Founder stories",
+     "description": "Nattaya Chai and Le Hoang Nam"
+    },
+    {
+     "time": "11:30",
+     "title": "Investor view: what travels across the border",
+     "description": "Priya Raman"
+    },
+    {
+     "time": "12:30",
+     "title": "Lunch",
+     "description": ""
+    },
+    {
+     "time": "14:00",
+     "title": "Site visit",
+     "description": "Bangkok logistics hub (transport provided)"
+    },
+    {
+     "time": "17:00",
+     "title": "Close",
+     "description": ""
+    }
+   ],
    "status": "PUBLISHED"
   },
   {
    "title": "Untold Story No. 14 - Mr. Francois Schwennicke",
-   "description": "**Event chair(s):** Mr. Francois Schwennicke\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Untold Story",
    "startAt": "2026-10-09T07:00:00.000Z",
@@ -416,6 +635,11 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Francois Schwennicke"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
@@ -440,11 +664,54 @@
    "currency": "SGD",
    "paymentInstructions": "Bank transfer to YPO Singapore. Reference: SUMMIT-<your name>.",
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Peter Mach",
+    "Ms. Julie Lam"
+   ],
+   "resources": [
+    {
+     "bio": "Professor of Strategy at NUS Business School. Advises **family enterprises** across Asia on succession.",
+     "name": "Prof. Anita Rao",
+     "photoUrl": "https://i.pravatar.cc/160?img=47"
+    },
+    {
+     "bio": "Founder of a regional logistics group and YPO Singapore forum moderator.",
+     "name": "David Tan",
+     "photoUrl": null
+    }
+   ],
+   "agenda": [
+    {
+     "time": "08:30",
+     "title": "Registration & coffee",
+     "description": ""
+    },
+    {
+     "time": "09:00",
+     "title": "Keynote: Leadership in uncertain times",
+     "description": "Prof. Anita Rao"
+    },
+    {
+     "time": "10:30",
+     "title": "Forum breakouts",
+     "description": "Small-group discussion by chapter"
+    },
+    {
+     "time": "12:30",
+     "title": "Lunch",
+     "description": ""
+    },
+    {
+     "time": "14:00",
+     "title": "Family business succession panel",
+     "description": "Moderated by David Tan"
+    }
+   ],
    "status": "PUBLISHED"
   },
   {
    "title": "Wine & Stories Dinner: UNCORK",
-   "description": "*Open the bottle. Open the person.*\n\n**Event chair(s):** Mr. Minh Lam\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "*Open the bottle. Open the person.*\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Social",
    "startAt": "2026-10-16T11:00:00.000Z",
@@ -467,11 +734,16 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Minh Lam"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "Hanoi Experience Day & The Bridge Room Ep.2: A Tech Talent & AI Services Platform",
-   "description": "**Event chair(s):** Mr. Tung Ta & To be updated\n\n_Date is tentative._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "_Date is tentative._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Bridge Room",
    "startAt": "2026-10-31T02:00:00.000Z",
@@ -494,6 +766,11 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Tung Ta"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "DRAFT"
   },
   {
@@ -518,11 +795,59 @@
    "currency": "MYR",
    "paymentInstructions": "Pay via the link below.",
    "paymentUrl": "https://example.com/pay",
+   "chairs": [
+    "Ms. Aisha Rahman",
+    "Mr. Daniel Yeo"
+   ],
+   "resources": [
+    {
+     "bio": "Family physician and mindfulness teacher. Runs wellbeing programmes for executive families across Malaysia.",
+     "name": "Dr. Lina Farouk",
+     "photoUrl": "https://i.pravatar.cc/160?img=44"
+    },
+    {
+     "bio": "Former national swimmer, now a youth fitness coach.",
+     "name": "Coach Ben Tay",
+     "photoUrl": "https://i.pravatar.cc/160?img=15"
+    }
+   ],
+   "agenda": [
+    {
+     "time": "Sat 07:00",
+     "title": "Sunrise beach yoga",
+     "description": "All ages"
+    },
+    {
+     "time": "Sat 09:30",
+     "title": "Mindful leadership at home",
+     "description": "Dr. Lina Farouk"
+    },
+    {
+     "time": "Sat 14:00",
+     "title": "Kids & teens water sports",
+     "description": "Coach Ben Tay"
+    },
+    {
+     "time": "Sat 19:00",
+     "title": "Family dinner on the beach",
+     "description": ""
+    },
+    {
+     "time": "Sun 08:00",
+     "title": "Rainforest walk",
+     "description": ""
+    },
+    {
+     "time": "Sun 12:00",
+     "title": "Farewell lunch",
+     "description": ""
+    }
+   ],
    "status": "PUBLISHED"
   },
   {
    "title": "Chapter Retreat in Shanghai & Hangzhou",
-   "description": "**Event chair(s):** Mr. Tho Co, Mr. Henry Nguyen, Mr. Victor Luong\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Retreat",
    "startAt": "2026-11-11T02:00:00.000Z",
@@ -545,11 +870,18 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Tho Co",
+    "Mr. Henry Nguyen",
+    "Mr. Victor Luong"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "The Bridge Room Ep.3: The Future of Money & Digital Trust",
-   "description": "**Event chair(s):** Mr. Tuong Nguyen\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Bridge Room",
    "startAt": "2026-11-19T07:00:00.000Z",
@@ -572,11 +904,16 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Tuong Nguyen"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "Glamping Retreat in Da Lat",
-   "description": "**Event chair(s):** Ms. Julie Lam, Ms. Quinn Hang\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Retreat",
    "startAt": "2026-11-27T02:00:00.000Z",
@@ -599,6 +936,12 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Ms. Julie Lam",
+    "Ms. Quinn Hang"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
@@ -623,11 +966,14 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "Christmas Party",
-   "description": "**Event chair(s):** Bamboo Forum\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Social",
    "startAt": "2026-12-10T11:00:00.000Z",
@@ -650,11 +996,16 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Bamboo Forum"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "YPO Family Pickleball Showdown",
-   "description": "**Event chair(s):** Mr. Thong Le, Ms. Van Ma\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Family",
    "startAt": "2026-12-12T02:00:00.000Z",
@@ -677,11 +1028,17 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Thong Le",
+    "Ms. Van Ma"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "Untold Story No. 15 - Mr. Ton Chirathivat",
-   "description": "**Event chair(s):** Mr. Ton Chirathivat\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Untold Story",
    "startAt": "2027-01-22T07:00:00.000Z",
@@ -704,11 +1061,16 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Ton Chirathivat"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "Tân Niên Gathering",
-   "description": "**Event chair(s):** Mr. Peter Mach, Mr. Nghia Luong\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Social",
    "startAt": "2027-02-20T11:00:00.000Z",
@@ -731,11 +1093,17 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Peter Mach",
+    "Mr. Nghia Luong"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "Untold Story No. 16 - Mr. Don Lam",
-   "description": "**Event chair(s):** Mr. Don Lam\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Untold Story",
    "startAt": "2027-03-12T07:00:00.000Z",
@@ -758,11 +1126,16 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Don Lam"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "Member Retreat to the North (only members)",
-   "description": "**Event chair(s):** to be updated\n\n_Date is tentative._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "_Date is tentative._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Retreat",
    "startAt": "2027-03-26T02:00:00.000Z",
@@ -785,11 +1158,14 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [],
+   "resources": [],
+   "agenda": [],
    "status": "DRAFT"
   },
   {
    "title": "The Bridge Room Ep.4: Modernizing Traditional Industries",
-   "description": "**Event chair(s):** to be updated\n\n_Date is tentative. Time to be confirmed._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "_Date is tentative. Time to be confirmed._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Bridge Room",
    "startAt": "2027-04-13T02:00:00.000Z",
@@ -812,11 +1188,14 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [],
+   "resources": [],
+   "agenda": [],
    "status": "DRAFT"
   },
   {
    "title": "Chapter Retreat in Tunisia",
-   "description": "**Event chair(s):** Mr. Francois Schwennickie, Mr. Ben Aissa, Ms. Hao Mai\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "Part of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Retreat",
    "startAt": "2027-04-18T02:00:00.000Z",
@@ -839,11 +1218,18 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Francois Schwennickie",
+    "Mr. Ben Aissa",
+    "Ms. Hao Mai"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "Wellbeing Event: Vitality and Mental fitness",
-   "description": "**Event chair(s):** to be updated\n\n_Time to be confirmed._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "_Time to be confirmed._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Learning",
    "startAt": "2027-04-27T02:00:00.000Z",
@@ -866,11 +1252,14 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [],
+   "resources": [],
+   "agenda": [],
    "status": "PUBLISHED"
   },
   {
    "title": "Forum Moderators Training",
-   "description": "**Event chair(s):** Mr. Cuong Nguyen\n\n_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Forum",
    "startAt": "2027-05-01T02:00:00.000Z",
@@ -890,11 +1279,16 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Cuong Nguyen"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "DRAFT"
   },
   {
    "title": "Leadership Summit with a Top University Professor",
-   "description": "**Event chair(s):** Mr. Minh Le & Mr. Huy Tran\n\n_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Learning",
    "startAt": "2027-05-01T02:00:00.000Z",
@@ -914,11 +1308,17 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [
+    "Mr. Minh Le",
+    "Mr. Huy Tran"
+   ],
+   "resources": [],
+   "agenda": [],
    "status": "DRAFT"
   },
   {
    "title": "Gala Dinner",
-   "description": "**Event chair(s):** to be updated\n\n_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
+   "description": "_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Vietnam & Vietnam Gold Learning Calendar 2026–27 — *The Next Run: No Finish Line. Just Better Peers.*",
    "hostChapter": "VN",
    "eventType": "Social",
    "startAt": "2027-06-01T02:00:00.000Z",
@@ -941,6 +1341,9 @@
    "currency": null,
    "paymentInstructions": null,
    "paymentUrl": null,
+   "chairs": [],
+   "resources": [],
+   "agenda": [],
    "status": "DRAFT"
   }
  ]
