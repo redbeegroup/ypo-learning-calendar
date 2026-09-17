@@ -402,7 +402,7 @@ export function EventForm({ chapters, types, lockedChapterId, defaultChapterId, 
       <section className="space-y-6">
         <h2 className="text-lg font-semibold">Programme</h2>
         <div className="space-y-2">
-          <Label>Event chair(s)</Label>
+          <Label>Event Chair</Label>
           {chairs.fields.map((f, i) => (
             <div key={f.id} className="flex gap-2">
               <Input placeholder="Name" {...register(`chairs.${i}.name` as const)} />

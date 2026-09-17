@@ -89,7 +89,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           <div className="flex items-start gap-2 sm:col-span-2">
             <UserRound className="mt-0.5 h-4 w-4 text-primary" />
             <span>
-              <span className="font-medium">Event chair{event.chairs.length > 1 ? "s" : ""}:</span>{" "}
+              <span className="font-medium">Event Chair:</span>{" "}
               {event.chairs.join(", ")}
             </span>
           </div>

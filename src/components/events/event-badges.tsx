@@ -58,7 +58,7 @@ export function registrationHint(
   }
   switch (event.registration.reason) {
     case "NOT_IN_SCOPE":
-      return visibilityLabel(event);
+      return "Not open to your chapter";
     case "NOT_OPEN_YET":
       return "Registration opens later";
     case "CLOSED":
