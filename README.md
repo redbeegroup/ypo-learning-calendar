@@ -3,7 +3,7 @@
 A login-protected web application where YPO chapters across South East Asia publish learning events and members browse, search, filter, view a calendar, and register. Everything runs in Docker, locally and in production.
 
 - **Members** see every published event, search and filter by chapter, theme, date, and payment, switch to a calendar view, register (or join the waitlist), and manage their registrations.
-- **Chapter admins** create, edit, publish, and cancel their chapter's events, see attendee lists, mark payments, export CSV, and invite or disable their chapter's members.
+- **Chapter managers** create, edit, publish, and cancel their chapter's events, see attendee lists, mark payments, export CSV, and invite or disable their chapter's members.
 - **Super admins** do all of the above for every chapter and also manage chapters and event types.
 
 Design spec: `docs/superpowers/specs/2026-09-09-learning-calendar-design.md`. Implementation plans per phase: `docs/superpowers/plans/`.
@@ -69,7 +69,7 @@ Files: `docker-compose.portainer.yml`, variables in `.env.portainer.example`. Th
 3. In Portainer: **Stacks → Add stack → Repository**. Repository URL = your repo, Compose path = `docker-compose.portainer.yml`. Under **Environment variables** choose *Advanced mode* and paste the contents of `.env.portainer.example` with real values (`APP_IMAGE`, `APP_URL`, `JWT_SECRET`, `POSTGRES_PASSWORD`, SMTP settings, seed admin, `APP_PORT`). Deploy.
 4. In NPMplus: **Proxy Hosts → Add**. Domain = your domain, Scheme = `http`, Forward host = the Docker host's IP (for example `192.168.1.20`), Forward port = `APP_PORT` (`3030` in the example file; the container itself always listens on 3000). On the SSL tab request a Let's Encrypt certificate and enable *Force SSL* and *HTTP/2*.
 5. Create the chapters, event types, and the first super admin once: in Portainer open the `ypo-app` container → **Console** → `/bin/sh`, then run `node prisma/seed.mjs`. (Or on the server: `docker exec ypo-app node prisma/seed.mjs`.)
-6. Open `https://<your domain>`, sign in as the seed admin, and invite chapter admins from **Admin → Members**.
+6. Open `https://<your domain>`, sign in as the seed admin, and invite chapter managers from **Admin → Members**.
 
 **Updates:** push to `main`, wait for the GitHub Action to finish (about 3 to 5 minutes), then in Portainer open the stack and click **Pull and redeploy** with *Re-pull image* enabled. Migrations apply on restart.
 

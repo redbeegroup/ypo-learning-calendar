@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/server/auth/session";
 import { ChangePasswordForm } from "@/components/auth/change-password-form";
 
-const ROLE_LABEL = { SUPER_ADMIN: "Super administrator", CHAPTER_ADMIN: "Chapter administrator", MEMBER: "Member" };
+const ROLE_LABEL = { SUPER_ADMIN: "Super administrator", CHAPTER_ADMIN: "Chapter manager", MEMBER: "Member" };
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
@@ -24,7 +24,7 @@ export default async function ProfilePage() {
           <dd>{ROLE_LABEL[user.role]}</dd>
         </dl>
         <p className="text-xs text-muted-foreground">
-          To change your name or chapters, contact your chapter administrator.
+          To change your name or chapters, contact your chapter manager.
         </p>
       </section>
       <section className="space-y-3">

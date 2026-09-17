@@ -30,7 +30,7 @@ type Props = {
 
 const ROLE_LABEL: Record<Role, string> = {
   SUPER_ADMIN: "Super admin",
-  CHAPTER_ADMIN: "Chapter admin",
+  CHAPTER_ADMIN: "Chapter manager",
   MEMBER: "Member",
 };
 
@@ -168,7 +168,7 @@ function UserDialog({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="MEMBER">Member</SelectItem>
-                <SelectItem value="CHAPTER_ADMIN">Chapter admin</SelectItem>
+                <SelectItem value="CHAPTER_ADMIN">Chapter manager</SelectItem>
                 <SelectItem value="SUPER_ADMIN">Super admin</SelectItem>
               </SelectContent>
             </Select>
