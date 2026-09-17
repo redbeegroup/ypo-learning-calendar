@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Import an events-export.json into another instance (for example production).
 
-Usage:  python3 scripts/import-events.py https://ypo.example.org admin@example.org [file.json] [--chapters VN,VNG]
+Usage:  python3 scripts/import-events.py https://ypo.example.org admin@example.org [file.json] [--chapters VN,VNG] [--update]
 Password is read from $YPO_PASSWORD or prompted. Requires a super admin account.
 - Creates missing chapters (by code) and event types (by name) first.
 - Skips events whose title already exists on the target, so it is safe to re-run.
+- --update instead overwrites existing events (matched by title) with the file's details, including
+  chairs, resources and agenda. Status and registrations on the target are left untouched.
 - Recreates each event with its original status: published, draft, or cancelled.
 - --chapters limits the import to events hosted by those chapter codes.
 """
@@ -16,6 +18,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from ypo_api import Api  # noqa: E402
 
 args = [a for a in sys.argv[1:] if not a.startswith("--")]
+update = "--update" in sys.argv
 only = None
 for a in sys.argv[1:]:
     if a.startswith("--chapters="):
@@ -49,12 +52,12 @@ for t in data["eventTypes"]:
         T[t["name"]] = b["data"]["id"]
         print("created event type", t["name"])
 
-existing = {e["title"] for e in api.all_events()}
-created, skipped = [], []
+existing = {e["title"]: e["id"] for e in api.all_events()}
+created, updated, skipped = [], [], []
 for e in data["events"]:
     if only and e["hostChapter"].upper() not in only:
         continue
-    if e["title"] in existing:
+    if e["title"] in existing and not update:
         skipped.append(e["title"])
         continue
     body = {
@@ -67,6 +70,14 @@ for e in data["events"]:
         "paymentInstructions": e["paymentInstructions"], "paymentUrl": e["paymentUrl"],
         "chairs": e.get("chairs", []), "resources": e.get("resources", []), "agenda": e.get("agenda", []),
     }
+    if e["title"] in existing:
+        s, b = api.call(f"/events/{existing[e['title']]}", "PATCH", body)
+        if s != 200:
+            print("FAIL (update)", e["title"], s, b)
+            continue
+        updated.append(e)
+        print(f"  updated  {e['hostChapter']:4} {e['startAt'][:10]}  {e['title']}")
+        continue
     s, b = api.call("/events", "POST", body)
     if s != 201:
         print("FAIL", e["title"], s, b)
@@ -78,4 +89,4 @@ for e in data["events"]:
         api.call(f"/events/{eid}/cancel", "POST")
     created.append(e)
     print(f"  {e['hostChapter']:4} {e['status']:9} {e['startAt'][:10]}  {e['title']}")
-print(f"\ncreated {len(created)}, skipped {len(skipped)} already present")
+print(f"\ncreated {len(created)}, updated {len(updated)}, skipped {len(skipped)} already present")
