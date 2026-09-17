@@ -8,7 +8,24 @@ export const RANGE_OPTIONS = [
   { value: "month", label: "This month" },
   { value: "3months", label: "Next 3 months" },
   { value: "past", label: "Past events" },
+  { value: "custom", label: "Year/month range" },
 ];
+
+const MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
+
+/** "YYYY-MM" inputs → inclusive ISO bounds (start of first month, end of last month). */
+export function monthRangeToDates(fromMonth?: string, toMonth?: string): { from?: string; to?: string; includePast: boolean } {
+  const out: { from?: string; to?: string; includePast: boolean } = { includePast: true };
+  if (fromMonth && MONTH.test(fromMonth)) {
+    const [y, m] = fromMonth.split("-").map(Number);
+    out.from = new Date(Date.UTC(y, m - 1, 1)).toISOString();
+  }
+  if (toMonth && MONTH.test(toMonth)) {
+    const [y, m] = toMonth.split("-").map(Number);
+    out.to = new Date(Date.UTC(y, m, 0, 23, 59, 59, 999)).toISOString();
+  }
+  return out;
+}
 
 export function rangeToDates(range: string): { from?: string; to?: string; includePast?: boolean } {
   const now = new Date();
@@ -44,7 +61,8 @@ export function flattenSearchParams(sp: SearchParams): Record<string, string> {
 /** Translate page search params (including the `range` shortcut) into a validated list query. */
 export function buildEventQuery(sp: SearchParams, extra: Record<string, string> = {}) {
   const raw = flattenSearchParams(sp);
-  const range = rangeToDates(raw.range ?? "upcoming");
+  const custom = raw.range === "custom" || raw.fromMonth || raw.toMonth;
+  const range = custom ? monthRangeToDates(raw.fromMonth, raw.toMonth) : rangeToDates(raw.range ?? "upcoming");
   const merged: Record<string, string> = {
     ...raw,
     ...(range.from ? { from: range.from } : {}),
@@ -53,5 +71,7 @@ export function buildEventQuery(sp: SearchParams, extra: Record<string, string> 
     ...extra,
   };
   delete merged.range;
+  delete merged.fromMonth;
+  delete merged.toMonth;
   return eventListQuerySchema.parse(merged);
 }

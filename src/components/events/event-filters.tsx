@@ -21,7 +21,7 @@ import { RANGE_OPTIONS } from "@/lib/event-query";
 type Option = { id: string; name: string };
 type Props = { chapters: Option[]; types: Option[]; showStatus?: boolean; hideRange?: boolean };
 
-const FILTER_KEYS = ["q", "chapterIds", "typeIds", "payment", "registrableOnly", "range", "status"];
+const FILTER_KEYS = ["q", "chapterIds", "typeIds", "payment", "registrableOnly", "range", "fromMonth", "toMonth", "status"];
 
 export function EventFilters({ chapters, types, showStatus, hideRange }: Props) {
   const router = useRouter();
@@ -58,6 +58,7 @@ export function EventFilters({ chapters, types, showStatus, hideRange }: Props) 
   }
 
   const hasFilters = FILTER_KEYS.some((k) => params.get(k));
+  const range = params.get("range") ?? (params.get("fromMonth") || params.get("toMonth") ? "custom" : "upcoming");
 
   return (
     <div className="space-y-3">
@@ -120,8 +121,13 @@ export function EventFilters({ chapters, types, showStatus, hideRange }: Props) 
 
         {!hideRange && (
           <Select
-            value={params.get("range") ?? "upcoming"}
-            onValueChange={(v) => update({ range: v === "upcoming" ? undefined : v })}
+            value={range}
+            onValueChange={(v) =>
+              update({
+                range: v === "upcoming" ? undefined : v,
+                ...(v !== "custom" ? { fromMonth: undefined, toMonth: undefined } : {}),
+              })
+            }
           >
             <SelectTrigger className="h-8 w-[150px] text-sm" aria-label="Date range">
               <SelectValue />
@@ -134,6 +140,25 @@ export function EventFilters({ chapters, types, showStatus, hideRange }: Props) 
               ))}
             </SelectContent>
           </Select>
+        )}
+        {!hideRange && range === "custom" && (
+          <div className="flex items-center gap-1 text-sm">
+            <Input
+              type="month"
+              aria-label="From month"
+              className="h-8 w-[150px] text-sm"
+              value={params.get("fromMonth") ?? ""}
+              onChange={(e) => update({ fromMonth: e.target.value || undefined })}
+            />
+            <span className="text-muted-foreground">to</span>
+            <Input
+              type="month"
+              aria-label="To month"
+              className="h-8 w-[150px] text-sm"
+              value={params.get("toMonth") ?? ""}
+              onChange={(e) => update({ toMonth: e.target.value || undefined })}
+            />
+          </div>
         )}
 
         <Select value={params.get("payment") ?? "ALL"} onValueChange={(v) => update({ payment: v === "ALL" ? undefined : v })}>
