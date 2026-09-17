@@ -73,6 +73,40 @@ describe("POST /api/v1/events", () => {
   });
 });
 
+describe("programme fields", () => {
+  it("stores chairs, resources and agenda and validates them", async () => {
+    const w = await world();
+    const tok = await w.t(w.superAdmin);
+    const programme = {
+      chairs: ["Mr. Minh Le", "Ms. Van Ma"],
+      resources: [{ name: "Dr. Ada Lovelace", photoUrl: "https://example.com/ada.jpg", bio: "Pioneer of **computing**." }],
+      agenda: [
+        { time: "09:00", title: "Registration", description: "" },
+        { time: "09:30", title: "Keynote", description: "AI for family businesses" },
+      ],
+    };
+    const ok = await create(tok, eventBody({ hostChapterId: w.sg.id, eventTypeId: w.type.id, ...programme }));
+    expect(ok.res.status).toBe(201);
+    expect(ok.body.data.chairs).toEqual(programme.chairs);
+    expect(ok.body.data.resources).toEqual(programme.resources);
+    expect(ok.body.data.agenda).toEqual(programme.agenda);
+
+    const bad = await create(
+      tok,
+      eventBody({
+        hostChapterId: w.sg.id,
+        eventTypeId: w.type.id,
+        resources: [{ name: "", photoUrl: "not a url", bio: "" }],
+        agenda: [{ time: "", title: "", description: "" }],
+      }),
+    );
+    expect(bad.res.status).toBe(400);
+    expect(bad.body.error.fields["resources.0.name"]).toBeDefined();
+    expect(bad.body.error.fields["resources.0.photoUrl"]).toBeDefined();
+    expect(bad.body.error.fields["agenda.0.title"]).toBeDefined();
+  });
+});
+
 describe("publish, update, cancel", () => {
   it("only managers of the host chapter can publish/update/cancel", async () => {
     const w = await world();

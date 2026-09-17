@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { CalendarDays, MapPin, Video, Users, ExternalLink } from "lucide-react";
+import { CalendarDays, MapPin, Video, Users, ExternalLink, UserRound } from "lucide-react";
 import { getCurrentUser } from "@/server/auth/session";
 import { getEvent } from "@/server/services/events";
 import { ApiError } from "@/server/api";
@@ -85,6 +85,15 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         <div className="flex items-start gap-2">
           <span className="font-medium">{registrationHint(event)}</span>
         </div>
+        {event.chairs.length > 0 && (
+          <div className="flex items-start gap-2 sm:col-span-2">
+            <UserRound className="mt-0.5 h-4 w-4 text-primary" />
+            <span>
+              <span className="font-medium">Event chair{event.chairs.length > 1 ? "s" : ""}:</span>{" "}
+              {event.chairs.join(", ")}
+            </span>
+          </div>
+        )}
       </div>
 
       {event.paymentType === "PAID" && (
@@ -129,6 +138,57 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         <h2 className="mb-2 text-lg font-semibold">About this event</h2>
         <Markdown>{event.description}</Markdown>
       </section>
+
+      {event.agenda.length > 0 && (
+        <section>
+          <h2 className="mb-3 text-lg font-semibold">Agenda</h2>
+          <ol className="space-y-4 border-l-2 border-primary/30 pl-4">
+            {event.agenda.map((item, i) => (
+              <li key={i} className="relative">
+                <span className="absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full bg-primary" />
+                {item.time && <div className="text-xs font-semibold uppercase tracking-wide text-primary">{item.time}</div>}
+                <div className="font-medium">{item.title}</div>
+                {item.description && (
+                  <p className="mt-0.5 whitespace-pre-line text-sm text-muted-foreground">{item.description}</p>
+                )}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      {event.resources.length > 0 && (
+        <section>
+          <h2 className="mb-3 text-lg font-semibold">Event resources</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {event.resources.map((r, i) => (
+              <div key={i} className="flex gap-3 rounded-lg border bg-card p-4">
+                {r.photoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={r.photoUrl} alt="" className="h-16 w-16 shrink-0 rounded-full object-cover" />
+                ) : (
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary/10 text-lg font-semibold text-primary">
+                    {r.name
+                      .split(/\s+/)
+                      .filter(Boolean)
+                      .slice(0, 2)
+                      .map((w) => w[0]?.toUpperCase())
+                      .join("")}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <div className="font-semibold">{r.name}</div>
+                  {r.bio && (
+                    <div className="prose prose-sm prose-slate mt-1 max-w-none text-muted-foreground">
+                      <Markdown>{r.bio}</Markdown>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </article>
   );
 }

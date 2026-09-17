@@ -31,7 +31,8 @@ export = {
             "visibility": e["visibility"], "accessChapters": [c["code"] for c in e["accessChapters"]],
             "capacity": e["capacity"], "registrationOpensAt": e["registrationOpensAt"], "registrationClosesAt": e["registrationClosesAt"],
             "paymentType": e["paymentType"], "price": e["price"], "currency": e["currency"],
-            "paymentInstructions": e["paymentInstructions"], "paymentUrl": e["paymentUrl"], "status": e["status"],
+            "paymentInstructions": e["paymentInstructions"], "paymentUrl": e["paymentUrl"],
+            "chairs": e.get("chairs", []), "resources": e.get("resources", []), "agenda": e.get("agenda", []), "status": e["status"],
         }
         for e in sorted(events, key=lambda e: (e["startAt"], e["title"]))
     ],

@@ -24,6 +24,20 @@ const nullableText = z
   .transform((v) => v || null);
 
 export const VISIBILITIES = ["LOCAL", "REGIONAL", "CHAPTER_SPECIFIC"] as const;
+
+export const resourceSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(120),
+  photoUrl: nullableUrl,
+  bio: z.string().max(5000).default(""),
+});
+export type EventResource = z.infer<typeof resourceSchema>;
+
+export const agendaItemSchema = z.object({
+  time: z.string().trim().max(40).default(""),
+  title: z.string().trim().min(1, "Title is required").max(200),
+  description: z.string().max(2000).default(""),
+});
+export type AgendaItem = z.infer<typeof agendaItemSchema>;
 export const PAYMENT_TYPES = ["FREE", "PAID"] as const;
 
 export const eventInputSchema = z
@@ -69,6 +83,9 @@ export const eventInputSchema = z
       .transform((v) => v || null),
     paymentInstructions: nullableText,
     paymentUrl: nullableUrl,
+    chairs: z.array(z.string().trim().min(1).max(120)).max(20).default([]),
+    resources: z.array(resourceSchema).max(30).default([]),
+    agenda: z.array(agendaItemSchema).max(100).default([]),
   })
   .superRefine((v, ctx) => {
     if (v.endAt <= v.startAt) ctx.addIssue({ code: "custom", path: ["endAt"], message: "End must be after start" });

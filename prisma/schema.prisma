@@ -123,6 +123,9 @@ model Event {
   currency             String?
   paymentInstructions  String?
   paymentUrl           String?
+  chairs               String[]    @default([])
+  resources            Json        @default("[]")
+  agenda               Json        @default("[]")
   status               EventStatus @default(DRAFT)
   createdById          String
   createdAt            DateTime    @default(now())

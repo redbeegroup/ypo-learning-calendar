@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, useFieldArray, Controller, type FieldPath } from "react-hook-form";
+import { Plus, X } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -41,6 +42,9 @@ const formSchema = z.object({
   currency: z.string(),
   paymentInstructions: z.string().max(5000),
   paymentUrl: z.string().max(2000),
+  chairs: z.array(z.object({ name: z.string().max(120) })),
+  resources: z.array(z.object({ name: z.string().max(120), photoUrl: z.string().max(2000), bio: z.string().max(5000) })),
+  agenda: z.array(z.object({ time: z.string().max(40), title: z.string().max(200), description: z.string().max(2000) })),
 });
 type FormValues = z.infer<typeof formSchema>;
 
@@ -79,6 +83,9 @@ function toFormValues(event: EventDto | undefined, defaults: { chapterId: string
       currency: "SGD",
       paymentInstructions: "",
       paymentUrl: "",
+      chairs: [],
+      resources: [],
+      agenda: [],
     };
   }
   const tz = event.timezone;
@@ -104,6 +111,9 @@ function toFormValues(event: EventDto | undefined, defaults: { chapterId: string
     currency: event.currency ?? "SGD",
     paymentInstructions: event.paymentInstructions ?? "",
     paymentUrl: event.paymentUrl ?? "",
+    chairs: event.chairs.map((name) => ({ name })),
+    resources: event.resources.map((r) => ({ name: r.name, photoUrl: r.photoUrl ?? "", bio: r.bio })),
+    agenda: event.agenda.map((a) => ({ time: a.time, title: a.title, description: a.description })),
   };
 }
 
@@ -132,6 +142,13 @@ function toApiBody(v: FormValues) {
     currency: v.currency || null,
     paymentInstructions: v.paymentInstructions || null,
     paymentUrl: v.paymentUrl || null,
+    chairs: v.chairs.map((c) => c.name.trim()).filter(Boolean),
+    resources: v.resources
+      .filter((r) => r.name.trim())
+      .map((r) => ({ name: r.name.trim(), photoUrl: r.photoUrl.trim() || null, bio: r.bio })),
+    agenda: v.agenda
+      .filter((a) => a.title.trim())
+      .map((a) => ({ time: a.time.trim(), title: a.title.trim(), description: a.description })),
   };
 }
 
@@ -163,6 +180,9 @@ export function EventForm({ chapters, types, lockedChapterId, defaultChapterId, 
   const visibility = watch("visibility");
   const paymentType = watch("paymentType");
   const isOnline = watch("isOnline");
+  const chairs = useFieldArray({ control, name: "chairs" });
+  const resources = useFieldArray({ control, name: "resources" });
+  const agenda = useFieldArray({ control, name: "agenda" });
 
   async function submit(values: FormValues, publish: boolean) {
     setServerError(null);
@@ -178,8 +198,8 @@ export function EventForm({ chapters, types, lockedChapterId, defaultChapterId, 
       if (e instanceof ClientApiError) {
         const fields = e.body.fields ?? {};
         for (const [k, msgs] of Object.entries(fields)) {
-          const key = FIELD_MAP[k] ?? (k as keyof FormValues);
-          if (key in values) setError(key, { message: msgs[0] });
+          const key = FIELD_MAP[k] ?? k;
+          if (key.split(".")[0] in values) setError(key as FieldPath<FormValues>, { message: msgs[0] });
         }
         setServerError(e.message);
       } else {
@@ -376,6 +396,81 @@ export function EventForm({ chapters, types, lockedChapterId, defaultChapterId, 
             <Input id="regClosesLocal" type="datetime-local" {...register("regClosesLocal")} />
             {err("regClosesLocal")}
           </div>
+        </div>
+      </section>
+
+      <section className="space-y-6">
+        <h2 className="text-lg font-semibold">Programme</h2>
+        <div className="space-y-2">
+          <Label>Event chair(s)</Label>
+          {chairs.fields.map((f, i) => (
+            <div key={f.id} className="flex gap-2">
+              <Input placeholder="Name" {...register(`chairs.${i}.name` as const)} />
+              <Button type="button" variant="ghost" size="icon" aria-label="Remove chair" onClick={() => chairs.remove(i)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+          <Button type="button" variant="outline" size="sm" onClick={() => chairs.append({ name: "" })}>
+            <Plus className="mr-1 h-4 w-4" /> Add chair
+          </Button>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Event resource(s) – speakers, facilitators, guests</Label>
+          {resources.fields.map((f, i) => (
+            <div key={f.id} className="space-y-2 rounded-md border p-3">
+              <div className="flex gap-2">
+                <Input placeholder="Name" {...register(`resources.${i}.name` as const)} />
+                <Button type="button" variant="ghost" size="icon" aria-label="Remove resource" onClick={() => resources.remove(i)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              {errors.resources?.[i]?.name?.message && (
+                <p className="text-xs text-destructive">{String(errors.resources[i]?.name?.message)}</p>
+              )}
+              <Input placeholder="Photo URL (https://…, optional)" {...register(`resources.${i}.photoUrl` as const)} />
+              {errors.resources?.[i]?.photoUrl?.message && (
+                <p className="text-xs text-destructive">{String(errors.resources[i]?.photoUrl?.message)}</p>
+              )}
+              <Textarea rows={3} placeholder="Short bio (Markdown supported)" {...register(`resources.${i}.bio` as const)} />
+            </div>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => resources.append({ name: "", photoUrl: "", bio: "" })}
+          >
+            <Plus className="mr-1 h-4 w-4" /> Add resource
+          </Button>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Agenda</Label>
+          {agenda.fields.map((f, i) => (
+            <div key={f.id} className="grid gap-2 rounded-md border p-3 sm:grid-cols-[120px_1fr_auto]">
+              <Input placeholder="09:00" aria-label="Time" {...register(`agenda.${i}.time` as const)} />
+              <div className="space-y-2">
+                <Input placeholder="Title" {...register(`agenda.${i}.title` as const)} />
+                {errors.agenda?.[i]?.title?.message && (
+                  <p className="text-xs text-destructive">{String(errors.agenda[i]?.title?.message)}</p>
+                )}
+                <Textarea rows={2} placeholder="Details (optional)" {...register(`agenda.${i}.description` as const)} />
+              </div>
+              <Button type="button" variant="ghost" size="icon" aria-label="Remove agenda item" onClick={() => agenda.remove(i)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => agenda.append({ time: "", title: "", description: "" })}
+          >
+            <Plus className="mr-1 h-4 w-4" /> Add agenda item
+          </Button>
         </div>
       </section>
 

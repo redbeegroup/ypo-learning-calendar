@@ -10,7 +10,7 @@ import {
   type RegisterCheck,
 } from "@/server/permissions";
 import { promoteWaitlist, sendPromotionEmails } from "@/server/services/waitlist";
-import type { EventInput, EventListQuery } from "@/lib/validation/events";
+import type { AgendaItem, EventInput, EventListQuery, EventResource } from "@/lib/validation/events";
 
 /** Include clause that also loads the acting user's own registration (at most one row). */
 export function eventInclude(userId: string) {
@@ -75,6 +75,9 @@ export function toEventDto(e: EventRow, actor: Actor, extras: Extras = {}) {
     currency: e.currency,
     paymentInstructions: e.paymentInstructions,
     paymentUrl: e.paymentUrl,
+    chairs: e.chairs,
+    resources: (e.resources as unknown as EventResource[] | null) ?? [],
+    agenda: (e.agenda as unknown as AgendaItem[] | null) ?? [],
     status: e.status,
     canManage: canManageEvent(actor, e),
     registration,
@@ -118,6 +121,9 @@ function toData(input: EventInput, createdById?: string): Prisma.EventUncheckedC
     currency: input.paymentType === "PAID" ? input.currency : null,
     paymentInstructions: input.paymentType === "PAID" ? input.paymentInstructions : null,
     paymentUrl: input.paymentType === "PAID" ? input.paymentUrl : null,
+    chairs: input.chairs,
+    resources: input.resources as Prisma.InputJsonValue,
+    agenda: input.agenda as Prisma.InputJsonValue,
     ...(createdById ? { createdById } : {}),
   } as Prisma.EventUncheckedCreateInput;
 }

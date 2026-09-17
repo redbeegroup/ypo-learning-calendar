@@ -4,6 +4,7 @@ Both scripts talk to the app's REST API as a super admin and need only Python 3 
 The password is read from `$YPO_PASSWORD` or prompted without echo.
 
 - `export-events.py <url> <admin email> [out.json]` — dumps chapters, event types and every event (published, draft, cancelled) to `scripts/data/events-export.json`.
+- `backfill-chairs.py <url> <admin email>` — one-off: moves an "Event chair(s)" line from descriptions into the structured chairs field.
 - `import-events.py <url> <admin email> [file.json] [--chapters VN,VNG]` — recreates them on another instance, creating missing chapters and event types first. Existing titles are skipped, so it is safe to re-run.
 
 Typical move from local dev to production:
