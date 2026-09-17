@@ -78,7 +78,7 @@ export function MembersFilters({ chapters, showChapter }: { chapters: Option[]; 
         <SelectContent>
           <SelectItem value="ALL">All roles</SelectItem>
           <SelectItem value="MEMBER">Members</SelectItem>
-          <SelectItem value="CHAPTER_ADMIN">Chapter admins</SelectItem>
+          <SelectItem value="CHAPTER_ADMIN">Chapter managers</SelectItem>
           <SelectItem value="SUPER_ADMIN">Super admins</SelectItem>
         </SelectContent>
       </Select>
