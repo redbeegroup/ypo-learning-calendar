@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -21,6 +22,21 @@ import { MonthPicker } from "@/components/ui/month-picker";
 
 type Option = { id: string; name: string };
 type Props = { chapters: Option[]; types: Option[]; showStatus?: boolean; hideRange?: boolean };
+
+function CheckItem({ checked, onToggle, children }: { checked: boolean; onToggle: () => void; children: React.ReactNode }) {
+  return (
+    <DropdownMenuItem
+      className="gap-2"
+      onSelect={(e) => {
+        e.preventDefault();
+        onToggle();
+      }}
+    >
+      <Checkbox checked={checked} tabIndex={-1} className="pointer-events-none" aria-hidden />
+      {children}
+    </DropdownMenuItem>
+  );
+}
 
 const FILTER_KEYS = ["q", "chapterIds", "typeIds", "payment", "registrableOnly", "range", "fromMonth", "toMonth", "status"];
 
@@ -86,22 +102,17 @@ export function EventFilters({ chapters, types, showStatus, hideRange }: Props) 
           <DropdownMenuContent align="start" className="max-h-80 overflow-y-auto">
             <DropdownMenuLabel>Chapters</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuCheckboxItem
-              checked={selectedChapters.length === 0}
-              onCheckedChange={() => update({ chapterIds: undefined })}
-              onSelect={(e) => e.preventDefault()}
-            >
+            <CheckItem checked={selectedChapters.length === 0} onToggle={() => update({ chapterIds: undefined })}>
               Show all
-            </DropdownMenuCheckboxItem>
+            </CheckItem>
             {chapters.map((c) => (
-              <DropdownMenuCheckboxItem
+              <CheckItem
                 key={c.id}
                 checked={selectedChapters.includes(c.id)}
-                onCheckedChange={() => toggle("chapterIds", c.id, selectedChapters)}
-                onSelect={(e) => e.preventDefault()}
+                onToggle={() => toggle("chapterIds", c.id, selectedChapters)}
               >
                 {c.name}
-              </DropdownMenuCheckboxItem>
+              </CheckItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -116,22 +127,13 @@ export function EventFilters({ chapters, types, showStatus, hideRange }: Props) 
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>Themes</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuCheckboxItem
-              checked={selectedTypes.length === 0}
-              onCheckedChange={() => update({ typeIds: undefined })}
-              onSelect={(e) => e.preventDefault()}
-            >
+            <CheckItem checked={selectedTypes.length === 0} onToggle={() => update({ typeIds: undefined })}>
               Show all
-            </DropdownMenuCheckboxItem>
+            </CheckItem>
             {types.map((t) => (
-              <DropdownMenuCheckboxItem
-                key={t.id}
-                checked={selectedTypes.includes(t.id)}
-                onCheckedChange={() => toggle("typeIds", t.id, selectedTypes)}
-                onSelect={(e) => e.preventDefault()}
-              >
+              <CheckItem key={t.id} checked={selectedTypes.includes(t.id)} onToggle={() => toggle("typeIds", t.id, selectedTypes)}>
                 {t.name}
-              </DropdownMenuCheckboxItem>
+              </CheckItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
