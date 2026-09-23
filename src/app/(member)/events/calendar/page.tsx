@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/server/auth/session";
 import { listChapters, listEventTypes } from "@/server/services/events";
 import { EventFilters } from "@/components/events/event-filters";
 import { EventCalendar } from "@/components/events/event-calendar";
-import { Button } from "@/components/ui/button";
 
 export default async function CalendarPage() {
   const user = await getCurrentUser();
@@ -14,9 +12,6 @@ export default async function CalendarPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Calendar</h1>
-        <Button asChild variant="outline" size="sm">
-          <Link href="/events">List view</Link>
-        </Button>
       </div>
       <EventFilters chapters={chapters} types={types} hideRange />
       <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">

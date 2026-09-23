@@ -25,9 +25,6 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Events</h1>
-        <Button asChild variant="outline" size="sm">
-          <Link href="/events/calendar">Calendar view</Link>
-        </Button>
       </div>
       <EventFilters chapters={chapters} types={types} />
       <p className="text-sm text-muted-foreground">
