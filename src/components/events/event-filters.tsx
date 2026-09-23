@@ -86,6 +86,13 @@ export function EventFilters({ chapters, types, showStatus, hideRange }: Props) 
           <DropdownMenuContent align="start" className="max-h-80 overflow-y-auto">
             <DropdownMenuLabel>Chapters</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuCheckboxItem
+              checked={selectedChapters.length === 0}
+              onCheckedChange={() => update({ chapterIds: undefined })}
+              onSelect={(e) => e.preventDefault()}
+            >
+              Show all
+            </DropdownMenuCheckboxItem>
             {chapters.map((c) => (
               <DropdownMenuCheckboxItem
                 key={c.id}
@@ -109,6 +116,13 @@ export function EventFilters({ chapters, types, showStatus, hideRange }: Props) 
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>Themes</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuCheckboxItem
+              checked={selectedTypes.length === 0}
+              onCheckedChange={() => update({ typeIds: undefined })}
+              onSelect={(e) => e.preventDefault()}
+            >
+              Show all
+            </DropdownMenuCheckboxItem>
             {types.map((t) => (
               <DropdownMenuCheckboxItem
                 key={t.id}
