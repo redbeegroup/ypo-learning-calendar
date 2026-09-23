@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Search, X } from "lucide-react";
+import { ChevronDown, Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -75,10 +75,11 @@ export function EventFilters({ chapters, types, showStatus, hideRange }: Props) 
       <div className="flex flex-wrap items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="h-8 font-normal">
               {selectedChapters.length
                 ? `${selectedChapters.length} chapter${selectedChapters.length > 1 ? "s" : ""}`
-                : "All chapters"}
+                : "By chapters"}
+              <ChevronDown className="ml-1 h-4 w-4 opacity-50" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="max-h-80 overflow-y-auto">
@@ -99,8 +100,9 @@ export function EventFilters({ chapters, types, showStatus, hideRange }: Props) 
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
-              {selectedTypes.length ? `${selectedTypes.length} theme${selectedTypes.length > 1 ? "s" : ""}` : "All themes"}
+            <Button variant="outline" size="sm" className="h-8 font-normal">
+              {selectedTypes.length ? `${selectedTypes.length} theme${selectedTypes.length > 1 ? "s" : ""}` : "By themes"}
+              <ChevronDown className="ml-1 h-4 w-4 opacity-50" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
