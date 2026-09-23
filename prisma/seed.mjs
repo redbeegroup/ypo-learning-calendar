@@ -7,17 +7,28 @@ const prisma = new PrismaClient();
 
 const chapters = [
   { code: "SG", name: "Singapore", country: "Singapore" },
-  { code: "SGG", name: "Singapore Gold", country: "Singapore" },
+  { code: "SLC", name: "Singapore Lion City", country: "Singapore" },
+  { code: "GCG", name: "Garden City Gold", country: "Singapore" },
+  { code: "STIG", name: "Straits Tigers", country: "Singapore" },
   { code: "MY", name: "Malaysia", country: "Malaysia" },
   { code: "MYG", name: "Malaysia Gold", country: "Malaysia" },
   { code: "TH", name: "Thailand", country: "Thailand" },
+  { code: "THG", name: "Thailand Gold", country: "Thailand" },
+  { code: "SEAA", name: "SEA Angels", country: "Thailand" },
   { code: "ID", name: "Indonesia", country: "Indonesia" },
+  { code: "IDG", name: "Indonesia Gold", country: "Indonesia" },
+  { code: "PANID", name: "Pan Indonesia", country: "Indonesia" },
   { code: "PH", name: "Philippines", country: "Philippines" },
   { code: "PHG", name: "Philippines Gold", country: "Philippines" },
+  { code: "PEARL", name: "Pearl of the Orient", country: "Philippines" },
   { code: "VN", name: "Vietnam", country: "Vietnam" },
   { code: "VNG", name: "Vietnam Gold", country: "Vietnam" },
-  { code: "MM", name: "Myanmar", country: "Myanmar" },
+  { code: "YGN", name: "Yangon", country: "Myanmar" },
   { code: "KH", name: "Cambodia", country: "Cambodia" },
+  { code: "PANA", name: "Pan Asia", country: "Regional" },
+  { code: "AU", name: "ASEAN United", country: "Regional" },
+  { code: "SEAB", name: "SEA Beyond", country: "Regional" },
+  { code: "SEAD", name: "SEA Dragon", country: "Regional" },
 ];
 
 const eventTypes = [

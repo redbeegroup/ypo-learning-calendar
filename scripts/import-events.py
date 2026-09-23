@@ -4,7 +4,7 @@
 Usage:  python3 scripts/import-events.py https://ypo.example.org admin@example.org [file.json] [--chapters VN,VNG] [--update]
 Password is read from $YPO_PASSWORD or prompted. Requires a super admin account.
 - Creates missing chapters (by code) and event types (by name) first.
-- Skips events whose title already exists on the target, so it is safe to re-run.
+- Skips events whose chapter + title already exist on the target, so it is safe to re-run.
 - --update instead overwrites existing events (matched by title) with the file's details, including
   chairs, resources and agenda. Status and registrations on the target are left untouched.
 - Recreates each event with its original status: published, draft, or cancelled.
@@ -36,6 +36,13 @@ api = Api(args[0], args[1])
 
 _, ch = api.call("/chapters?all=true")
 C = {c["code"]: c["id"] for c in ch["data"]}
+for r in data.get("renames", []):
+    new = r.get("newCode", r["code"])
+    if r["code"] in C and (new == r["code"] or new not in C):
+        s, b = api.call(f"/chapters/{C[r['code']]}", "PATCH", {"name": r["name"], "code": r.get("newCode", r["code"])})
+        assert s == 200, b
+        C[r.get("newCode", r["code"])] = C.pop(r["code"])
+        print("renamed chapter", r["code"], "->", r["name"], f"({r.get('newCode', r['code'])})")
 for c in data["chapters"]:
     if c["code"] not in C:
         s, b = api.call("/chapters", "POST", {"name": c["name"], "code": c["code"], "country": c["country"], "isActive": c["isActive"]})
@@ -52,12 +59,13 @@ for t in data["eventTypes"]:
         T[t["name"]] = b["data"]["id"]
         print("created event type", t["name"])
 
-existing = {e["title"]: e["id"] for e in api.all_events()}
+existing = {(e["hostChapter"]["code"], e["title"]): e["id"] for e in api.all_events()}
 created, updated, skipped = [], [], []
 for e in data["events"]:
     if only and e["hostChapter"].upper() not in only:
         continue
-    if e["title"] in existing and not update:
+    key = (e["hostChapter"], e["title"])
+    if key in existing and not update:
         skipped.append(e["title"])
         continue
     body = {
@@ -70,8 +78,8 @@ for e in data["events"]:
         "paymentInstructions": e["paymentInstructions"], "paymentUrl": e["paymentUrl"],
         "chairs": e.get("chairs", []), "resources": e.get("resources", []), "agenda": e.get("agenda", []),
     }
-    if e["title"] in existing:
-        s, b = api.call(f"/events/{existing[e['title']]}", "PATCH", body)
+    if key in existing:
+        s, b = api.call(f"/events/{existing[key]}", "PATCH", body)
         if s != 200:
             print("FAIL (update)", e["title"], s, b)
             continue
