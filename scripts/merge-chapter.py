@@ -48,6 +48,12 @@ if not apply:
     print("\nre-run with --apply to make these changes")
     sys.exit(0)
 
+# The delete endpoint arrived after the first release; refuse to run against an older server.
+s, _ = api.call("/events/version-probe", "DELETE")
+if s == 405:
+    print("\nThis server does not support deleting events yet (old image). Redeploy the latest image first; nothing was changed.")
+    sys.exit(2)
+
 for e in to_delete:
     s, b = api.call(f"/events/{e['id']}", "DELETE")
     print("deleted" if s == 200 else f"FAILED {s} {b}", e["title"])

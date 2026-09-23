@@ -29,7 +29,12 @@ class Api:
             with urllib.request.urlopen(req, timeout=60) as r:
                 return r.status, json.loads(r.read())
         except urllib.error.HTTPError as e:
-            return e.code, json.loads(e.read())
+            raw = e.read()
+            try:
+                return e.code, json.loads(raw)
+            except ValueError:
+                text = raw.decode("utf-8", "replace").strip()[:200]
+                return e.code, {"error": {"code": f"HTTP_{e.code}", "message": text or e.reason}}
 
     def all_events(self):
         items = []
