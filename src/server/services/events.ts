@@ -200,7 +200,7 @@ function managedChapterIds(actor: Actor): string[] | null {
   return [];
 }
 
-export async function listEvents(actor: Actor, q: EventListQuery) {
+function buildListWhere(actor: Actor, q: EventListQuery): Prisma.EventWhereInput {
   const where: Prisma.EventWhereInput = {};
   const and: Prisma.EventWhereInput[] = [];
 
@@ -237,6 +237,23 @@ export async function listEvents(actor: Actor, q: EventListQuery) {
     });
   }
   if (and.length) where.AND = and;
+  return where;
+}
+
+/** Event counts per chapter and per type for the current query, each ignoring its own filter (faceted counts). */
+export async function listEventFacets(actor: Actor, q: EventListQuery) {
+  const [byChapter, byType] = await Promise.all([
+    prisma.event.groupBy({ by: ["hostChapterId"], where: buildListWhere(actor, { ...q, chapterIds: [] }), _count: { _all: true } }),
+    prisma.event.groupBy({ by: ["eventTypeId"], where: buildListWhere(actor, { ...q, typeIds: [] }), _count: { _all: true } }),
+  ]);
+  return {
+    chapters: Object.fromEntries(byChapter.map((r) => [r.hostChapterId, r._count._all])),
+    types: Object.fromEntries(byType.map((r) => [r.eventTypeId, r._count._all])),
+  };
+}
+
+export async function listEvents(actor: Actor, q: EventListQuery) {
+  const where = buildListWhere(actor, q);
 
   const [total, rows] = await Promise.all([
     prisma.event.count({ where }),

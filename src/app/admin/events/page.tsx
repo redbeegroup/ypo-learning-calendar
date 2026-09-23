@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/server/auth/session";
-import { listChapters, listEventTypes, listEvents } from "@/server/services/events";
+import { listChapters, listEventFacets, listEventTypes, listEvents } from "@/server/services/events";
 import { buildEventQuery, flattenSearchParams, type SearchParams } from "@/lib/event-query";
 import { EventFilters } from "@/components/events/event-filters";
 import { StatusBadge, PaymentBadge } from "@/components/events/event-badges";
@@ -17,7 +17,14 @@ export default async function AdminEventsPage({ searchParams }: { searchParams: 
   const raw = flattenSearchParams(sp);
   const query = buildEventQuery(sp, { status: raw.status ?? "PUBLISHED", pageSize: "50" });
   const scoped = { ...query, chapterIds: user.role === "SUPER_ADMIN" ? query.chapterIds : [user.chapterId] };
-  const [result, chapters, types] = await Promise.all([listEvents(user, scoped), listChapters(), listEventTypes()]);
+  const [result, chapters, types, facets] = await Promise.all([
+    listEvents(user, scoped),
+    listChapters(),
+    listEventTypes(),
+    listEventFacets(user, scoped),
+  ]);
+  const chapterOptions = chapters.map((c) => ({ ...c, count: facets.chapters[c.id] ?? 0 }));
+  const typeOptions = types.map((t) => ({ ...t, count: facets.types[t.id] ?? 0 }));
 
   return (
     <div className="space-y-4">
@@ -27,7 +34,7 @@ export default async function AdminEventsPage({ searchParams }: { searchParams: 
           <Link href="/admin/events/new">New event</Link>
         </Button>
       </div>
-      <EventFilters chapters={chapters} types={types} showStatus />
+      <EventFilters chapters={chapterOptions} types={typeOptions} showStatus />
       <div className="overflow-x-auto rounded-lg border bg-card">
         <Table>
           <TableHeader>

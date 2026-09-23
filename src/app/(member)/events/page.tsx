@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/server/auth/session";
-import { listChapters, listEventTypes, listEvents } from "@/server/services/events";
+import { listChapters, listEventFacets, listEventTypes, listEvents } from "@/server/services/events";
 import { buildEventQuery, flattenSearchParams, type SearchParams } from "@/lib/event-query";
 import { EventCard } from "@/components/events/event-card";
 import { EventFilters } from "@/components/events/event-filters";
@@ -12,7 +12,14 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
   if (!user) redirect("/login");
   const sp = await searchParams;
   const query = buildEventQuery(sp);
-  const [result, chapters, types] = await Promise.all([listEvents(user, query), listChapters(), listEventTypes()]);
+  const [result, chapters, types, facets] = await Promise.all([
+    listEvents(user, query),
+    listChapters(),
+    listEventTypes(),
+    listEventFacets(user, query),
+  ]);
+  const chapterOptions = chapters.map((c) => ({ ...c, count: facets.chapters[c.id] ?? 0 }));
+  const typeOptions = types.map((t) => ({ ...t, count: facets.types[t.id] ?? 0 }));
   const pages = Math.max(1, Math.ceil(result.total / result.pageSize));
 
   const pageLink = (page: number) => {
@@ -26,7 +33,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Events</h1>
       </div>
-      <EventFilters chapters={chapters} types={types} />
+      <EventFilters chapters={chapterOptions} types={typeOptions} />
       <p className="text-sm text-muted-foreground">
         {result.total} event{result.total === 1 ? "" : "s"}
       </p>

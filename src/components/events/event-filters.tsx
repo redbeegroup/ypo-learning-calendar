@@ -20,7 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RANGE_OPTIONS } from "@/lib/event-query";
 import { MonthPicker } from "@/components/ui/month-picker";
 
-type Option = { id: string; name: string };
+type Option = { id: string; name: string; count?: number };
 type Props = { chapters: Option[]; types: Option[]; showStatus?: boolean; hideRange?: boolean };
 
 function CheckItem({ checked, onToggle, children }: { checked: boolean; onToggle: () => void; children: React.ReactNode }) {
@@ -112,6 +112,7 @@ export function EventFilters({ chapters, types, showStatus, hideRange }: Props) 
                 onToggle={() => toggle("chapterIds", c.id, selectedChapters)}
               >
                 {c.name}
+                {c.count !== undefined && <span className="text-muted-foreground">({c.count})</span>}
               </CheckItem>
             ))}
           </DropdownMenuContent>
@@ -133,6 +134,7 @@ export function EventFilters({ chapters, types, showStatus, hideRange }: Props) 
             {types.map((t) => (
               <CheckItem key={t.id} checked={selectedTypes.includes(t.id)} onToggle={() => toggle("typeIds", t.id, selectedTypes)}>
                 {t.name}
+                {t.count !== undefined && <span className="text-muted-foreground">({t.count})</span>}
               </CheckItem>
             ))}
           </DropdownMenuContent>
