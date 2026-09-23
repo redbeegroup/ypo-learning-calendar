@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RANGE_OPTIONS } from "@/lib/event-query";
+import { MonthPicker } from "@/components/ui/month-picker";
 
 type Option = { id: string; name: string };
 type Props = { chapters: Option[]; types: Option[]; showStatus?: boolean; hideRange?: boolean };
@@ -145,20 +146,18 @@ export function EventFilters({ chapters, types, showStatus, hideRange }: Props) 
         )}
         {!hideRange && range === "custom" && (
           <div className="flex items-center gap-1 text-sm">
-            <Input
-              type="month"
-              aria-label="From month"
-              className="h-8 w-[150px] text-sm"
+            <MonthPicker
               value={params.get("fromMonth") ?? ""}
-              onChange={(e) => update({ fromMonth: e.target.value || undefined })}
+              onChange={(v) => update({ fromMonth: v || undefined })}
+              placeholder="From month"
+              max={params.get("toMonth") ?? undefined}
             />
             <span className="text-muted-foreground">to</span>
-            <Input
-              type="month"
-              aria-label="To month"
-              className="h-8 w-[150px] text-sm"
+            <MonthPicker
               value={params.get("toMonth") ?? ""}
-              onChange={(e) => update({ toMonth: e.target.value || undefined })}
+              onChange={(v) => update({ toMonth: v || undefined })}
+              placeholder="To month"
+              min={params.get("fromMonth") ?? undefined}
             />
           </div>
         )}
