@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { GET as listEvents, POST as createEvent } from "@/app/api/v1/events/route";
-import { GET as getEvent, PATCH as updateEvent } from "@/app/api/v1/events/[id]/route";
+import { GET as getEvent, PATCH as updateEvent, DELETE as deleteEvent } from "@/app/api/v1/events/[id]/route";
 import { POST as publishEvent } from "@/app/api/v1/events/[id]/publish/route";
 import { POST as cancelEvent } from "@/app/api/v1/events/[id]/cancel/route";
 import { jsonRequest, createChapter, createUser, createEventType, tokenFor, eventBody } from "./helpers";
@@ -142,6 +142,20 @@ describe("publish, update, cancel", () => {
       p(id),
     );
     expect((await can.json()).data.status).toBe("CANCELLED");
+  });
+});
+
+describe("DELETE /api/v1/events/:id", () => {
+  it("only super admins can delete; the event is gone afterwards", async () => {
+    const w = await world();
+    const { body } = await create(await w.t(w.sgAdmin), eventBody({ hostChapterId: w.sg.id, eventTypeId: w.type.id }));
+    const id = body.data.id;
+    const denied = await deleteEvent(jsonRequest(`/api/v1/events/${id}`, "DELETE", undefined, await w.t(w.sgAdmin)), p(id));
+    expect(denied.status).toBe(403);
+    const ok = await deleteEvent(jsonRequest(`/api/v1/events/${id}`, "DELETE", undefined, await w.t(w.superAdmin)), p(id));
+    expect(ok.status).toBe(200);
+    const gone = await getEvent(jsonRequest(`/api/v1/events/${id}`, "GET", undefined, await w.t(w.superAdmin)), p(id));
+    expect(gone.status).toBe(404);
   });
 });
 

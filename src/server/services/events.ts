@@ -190,6 +190,15 @@ async function setStatus(actor: Actor, id: string, status: EventStatus) {
   return toEventDto(event, actor);
 }
 
+/** Permanently removes an event and its registrations. Super admins only; managers should cancel instead. */
+export async function deleteEvent(actor: Actor, id: string) {
+  if (actor.role !== "SUPER_ADMIN") forbidden("Only super administrators can delete events");
+  const existing = await prisma.event.findUnique({ where: { id }, select: { id: true } });
+  if (!existing) notFound("Event");
+  await prisma.event.delete({ where: { id } });
+  return { deleted: true };
+}
+
 export const publishEvent = (actor: Actor, id: string) => setStatus(actor, id, "PUBLISHED");
 export const cancelEvent = (actor: Actor, id: string) => setStatus(actor, id, "CANCELLED");
 
