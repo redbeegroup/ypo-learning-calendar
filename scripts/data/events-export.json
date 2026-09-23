@@ -43,6 +43,12 @@
    "isActive": true
   },
   {
+   "code": "MM",
+   "name": "Myanmar",
+   "country": "Myanmar",
+   "isActive": true
+  },
+  {
    "code": "PANA",
    "name": "Pan Asia",
    "country": "Regional",
@@ -130,12 +136,6 @@
    "code": "VNG",
    "name": "Vietnam Gold",
    "country": "Vietnam",
-   "isActive": true
-  },
-  {
-   "code": "YGN",
-   "name": "Yangon",
-   "country": "Myanmar",
    "isActive": true
   }
  ],
@@ -1049,7 +1049,7 @@
   {
    "title": "YPO x World Bank Series",
    "description": "Part of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Learning",
    "startAt": "2026-08-13T02:30:00.000Z",
    "endAt": "2026-08-14T10:30:00.000Z",
@@ -1430,7 +1430,7 @@
   {
    "title": "YPO Uncorked: An Evening of Flavours & Friendships",
    "description": "_Time to be confirmed._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Social",
    "startAt": "2026-08-22T02:30:00.000Z",
    "endAt": "2026-08-22T10:30:00.000Z",
@@ -2548,7 +2548,7 @@
   {
    "title": "Wellness / Longevity",
    "description": "_Time to be confirmed._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Health & Wellness",
    "startAt": "2026-09-10T02:30:00.000Z",
    "endAt": "2026-09-10T10:30:00.000Z",
@@ -2853,7 +2853,7 @@
   {
    "title": "Shaolin Experience",
    "description": "Experience and cultural learning.\n\n_Time to be confirmed._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Personal Growth",
    "startAt": "2026-09-20T02:30:00.000Z",
    "endAt": "2026-09-20T10:30:00.000Z",
@@ -4663,7 +4663,7 @@
   {
    "title": "Dine-Around 1",
    "description": "_Time to be confirmed._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Networking",
    "startAt": "2026-11-01T02:30:00.000Z",
    "endAt": "2026-11-01T10:30:00.000Z",
@@ -4690,7 +4690,7 @@
   {
    "title": "Family Forum Training with CFF (Virtual)",
    "description": "YPO-style forum designed for family members: spouses and children aged 5 to 37. Open to the region.\n\n_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Forum",
    "startAt": "2026-11-01T02:30:00.000Z",
    "endAt": "2026-11-01T10:30:00.000Z",
@@ -4717,7 +4717,7 @@
   {
    "title": "Taste of Hyrox",
    "description": "_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Health & Wellness",
    "startAt": "2026-11-01T02:30:00.000Z",
    "endAt": "2026-11-01T10:30:00.000Z",
@@ -5067,7 +5067,7 @@
   {
    "title": "YPO Gives Back",
    "description": "Part of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Social Impact",
    "startAt": "2026-11-15T02:30:00.000Z",
    "endAt": "2026-11-16T10:30:00.000Z",
@@ -5584,7 +5584,7 @@
   {
    "title": "Chapter Family Retreat",
    "description": "Mid December. Open to the region.\n\n_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Retreat",
    "startAt": "2026-12-01T02:30:00.000Z",
    "endAt": "2026-12-01T10:30:00.000Z",
@@ -5611,7 +5611,7 @@
   {
    "title": "Year-end Social",
    "description": "_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Social",
    "startAt": "2026-12-01T02:30:00.000Z",
    "endAt": "2026-12-01T10:30:00.000Z",
@@ -6417,7 +6417,7 @@
   {
    "title": "AI Event",
    "description": "_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Learning",
    "startAt": "2027-01-01T02:30:00.000Z",
    "endAt": "2027-01-01T10:30:00.000Z",
@@ -6444,7 +6444,7 @@
   {
    "title": "Success Across Generations (S-2)",
    "description": "_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Family",
    "startAt": "2027-01-01T02:30:00.000Z",
    "endAt": "2027-01-01T10:30:00.000Z",
@@ -6471,7 +6471,7 @@
   {
    "title": "Taste of YPO in Mandalay",
    "description": "End of January.\n\n**Venue:** Mandalay\n\n_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Networking",
    "startAt": "2027-01-01T02:30:00.000Z",
    "endAt": "2027-01-01T10:30:00.000Z",
@@ -7289,7 +7289,7 @@
   {
    "title": "Dine-Around 2 (Gold Dinner)",
    "description": "_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Networking",
    "startAt": "2027-02-01T02:30:00.000Z",
    "endAt": "2027-02-01T10:30:00.000Z",
@@ -7316,7 +7316,7 @@
   {
    "title": "YPO Yoma Yangon Marathon",
    "description": "_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Family",
    "startAt": "2027-02-01T02:30:00.000Z",
    "endAt": "2027-02-01T10:30:00.000Z",
@@ -7974,7 +7974,7 @@
   {
    "title": "Executive Education with Prof Boris Groysberg (Series II)",
    "description": "_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Learning",
    "startAt": "2027-03-01T02:30:00.000Z",
    "endAt": "2027-03-01T10:30:00.000Z",
@@ -8180,7 +8180,7 @@
   {
    "title": "YPO Global Members Visit to Yangon",
    "description": "Part of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Networking",
    "startAt": "2027-03-18T02:30:00.000Z",
    "endAt": "2027-03-24T10:30:00.000Z",
@@ -8293,7 +8293,7 @@
   {
    "title": "Chapter Retreat — Himalayas",
    "description": "Part of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Retreat",
    "startAt": "2027-03-26T02:30:00.000Z",
    "endAt": "2027-03-30T10:30:00.000Z",
@@ -8613,7 +8613,7 @@
   {
    "title": "Thingyan / Family Day",
    "description": "_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Family",
    "startAt": "2027-04-01T02:30:00.000Z",
    "endAt": "2027-04-01T10:30:00.000Z",
@@ -9844,7 +9844,7 @@
   {
    "title": "Day Chair Training",
    "description": "_Date to be confirmed (placeholder: 1st of the month)._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Learning",
    "startAt": "2027-06-01T02:30:00.000Z",
    "endAt": "2027-06-01T10:30:00.000Z",
@@ -10041,7 +10041,7 @@
   {
    "title": "YIC Annual General Meeting",
    "description": "_Time to be confirmed._\n\nPart of the YPO Yangon Learning Calendar FY26/27 — *Forward Together*.",
-   "hostChapter": "YGN",
+   "hostChapter": "MM",
    "eventType": "Social",
    "startAt": "2027-06-26T02:30:00.000Z",
    "endAt": "2027-06-26T10:30:00.000Z",

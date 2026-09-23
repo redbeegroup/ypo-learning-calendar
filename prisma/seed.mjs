@@ -23,7 +23,7 @@ const chapters = [
   { code: "PEARL", name: "Pearl of the Orient", country: "Philippines" },
   { code: "VN", name: "Vietnam", country: "Vietnam" },
   { code: "VNG", name: "Vietnam Gold", country: "Vietnam" },
-  { code: "YGN", name: "Yangon", country: "Myanmar" },
+  { code: "MM", name: "Myanmar", country: "Myanmar" },
   { code: "KH", name: "Cambodia", country: "Cambodia" },
   { code: "PANA", name: "Pan Asia", country: "Regional" },
   { code: "AU", name: "ASEAN United", country: "Regional" },

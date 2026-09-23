@@ -36,7 +36,7 @@ CHAPTERS = [
     ("PEARL", "Pearl of the Orient", "Philippines"),
     ("VN", "Vietnam", "Vietnam"),
     ("VNG", "Vietnam Gold", "Vietnam"),
-    ("YGN", "Yangon", "Myanmar"),
+    ("MM", "Myanmar", "Myanmar"),
     ("KH", "Cambodia", "Cambodia"),
     ("PANA", "Pan Asia", "Regional"),
     ("AU", "ASEAN United", "Regional"),
@@ -44,7 +44,6 @@ CHAPTERS = [
     ("SEAD", "SEA Dragon", "Regional"),
 ]
 RENAMES = [
-    {"code": "MM", "name": "Yangon", "newCode": "YGN"},
     {"code": "SGG", "name": "Singapore Lion City", "newCode": "SLC"},
 ]
 EVENT_TYPES = [
@@ -56,7 +55,7 @@ TZ = {
     "SG": "Asia/Singapore", "SLC": "Asia/Singapore", "GCG": "Asia/Singapore", "STIG": "Asia/Singapore",
     "MY": "Asia/Kuala_Lumpur", "MYG": "Asia/Kuala_Lumpur", "TH": "Asia/Bangkok", "THG": "Asia/Bangkok", "SEAA": "Asia/Bangkok",
     "ID": "Asia/Jakarta", "IDG": "Asia/Jakarta", "PANID": "Asia/Jakarta", "PH": "Asia/Manila", "PHG": "Asia/Manila",
-    "PEARL": "Asia/Manila", "VN": "Asia/Ho_Chi_Minh", "VNG": "Asia/Ho_Chi_Minh", "YGN": "Asia/Yangon", "KH": "Asia/Phnom_Penh",
+    "PEARL": "Asia/Manila", "VN": "Asia/Ho_Chi_Minh", "VNG": "Asia/Ho_Chi_Minh", "MM": "Asia/Yangon", "KH": "Asia/Phnom_Penh",
     "PANA": "Asia/Singapore", "AU": "Asia/Singapore", "SEAB": "Asia/Singapore", "SEAD": "Asia/Singapore",
 }
 OFFSET = {"Asia/Singapore": "+08:00", "Asia/Kuala_Lumpur": "+08:00", "Asia/Manila": "+08:00", "Asia/Bangkok": "+07:00",
@@ -67,7 +66,7 @@ THEME = {
     "IDG": None, "ID": "Beyond the Surface", "PANID": None, "PEARL": "Resilience", "PHG": "Vanguard",
     "PH": "APEX — The Standard Above", "SEAB": "Connect – Grow – Impact", "SEAD": "Future Technology & Humanity",
     "SLC": "Curiosity. Courage. Connection.", "SG": "ACDC: Authentic Conversations & Deeper Connections",
-    "THG": "The Journey to Your Next Summit", "TH": "Be Bold", "YGN": "Forward Together", "STIG": "Beyond the Familiar",
+    "THG": "The Journey to Your Next Summit", "TH": "Be Bold", "MM": "Forward Together", "STIG": "Beyond the Familiar",
 }
 
 events = []
@@ -428,8 +427,8 @@ E(C, "The Decision Lab", "2027-03")
 E(C, "Family Retreat: The Thai Polo", "2027-03", type="Family")
 E(C, "AGM & Gala", "2027-06-25", time="15:00-21:00", type="Social")
 
-# ----------------------------------------------------------------------------------------------------------------- Yangon
-C = "YGN"
+# ----------------------------------------------------------------------------------------------------------------- Myanmar (Yangon calendar)
+C = "MM"
 E(C, "YPO x World Bank Series", "2026-08-13..2026-08-14")
 E(C, "YPO Uncorked: An Evening of Flavours & Friendships", "2026-08-22", type="Social")
 E(C, "Wellness / Longevity", "2026-09-10", type="Health & Wellness")
