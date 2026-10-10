@@ -50,6 +50,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-ypo}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    # Postgres is reachable only from the Docker host itself (loopback), for SSH tunnels from an admin's machine:
+    #   ssh -L 5433:127.0.0.1:${DB_PORT:-5432} user@docker-host   then connect a client to localhost:5433
+    ports:
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ypo} -d ${POSTGRES_DB:-ypo}"]
       interval: 10s

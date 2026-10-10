@@ -73,6 +73,12 @@ Files: `docker-compose.portainer.yml`, variables in `.env.portainer.example`. Th
 
 **Updates:** push to `main`, wait for the GitHub Action to finish (about 3 to 5 minutes), then in Portainer open the stack and click **Pull and redeploy** with *Re-pull image* enabled. Migrations apply on restart.
 
+**Database access from your machine:** Postgres listens on the Docker host's loopback only (`127.0.0.1:5432`). Open an SSH tunnel and point any Postgres client at `localhost:5433`, user `ypo`, database `ypo`, the stack's `POSTGRES_PASSWORD`:
+```bash
+ssh -N -L 5433:127.0.0.1:5432 user@docker-host
+```
+For a quick SQL prompt without a tunnel: Portainer → Containers → `ypo-db` → Console → `psql -U ypo -d ypo`.
+
 **Backups:** the `ypo-backup` container writes a gzipped `pg_dump` into the `backups` volume daily. Copy them off the server with `docker cp ypo-backup:/backups ./backups`. Restore with `gunzip -c file.sql.gz | docker exec -i ypo-db psql -U ypo -d ypo`.
 
 **Rollback:** every build is also tagged with its commit SHA (`ghcr.io/<github-user>/ypo-lc:<sha>`). Set `APP_IMAGE` to a previous tag and update the stack.
