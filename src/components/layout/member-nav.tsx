@@ -11,8 +11,10 @@ type Props = { links: { href: string; label: string }[]; userLabel: string };
 export function MemberNav({ links, userLabel }: Props) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const linkClass = (href: string) =>
-    `rounded-md px-2 py-1 hover:bg-blue-800 ${pathname === href || pathname.startsWith(href + "/") ? "bg-blue-800" : ""}`;
+  // Only the most specific matching link is active, so /events/calendar highlights Calendar but not Events.
+  const matches = (href: string) => pathname === href || pathname.startsWith(href + "/");
+  const activeHref = links.filter((l) => matches(l.href)).sort((a, b) => b.href.length - a.href.length)[0]?.href;
+  const linkClass = (href: string) => `rounded-md px-2 py-1 hover:bg-blue-800 ${href === activeHref ? "bg-blue-800" : ""}`;
 
   return (
     <>
