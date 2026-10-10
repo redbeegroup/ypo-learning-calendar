@@ -12,7 +12,6 @@ export default async function MemberLayout({ children }: { children: React.React
     { href: "/events", label: "Events" },
     { href: "/events/calendar", label: "Calendar" },
     { href: "/my-registrations", label: "My registrations" },
-    ...(isAdmin(user) ? [{ href: "/admin/events", label: "Admin" }] : []),
   ];
 
   return (
@@ -22,7 +21,10 @@ export default async function MemberLayout({ children }: { children: React.React
           <Link href="/events" className="font-semibold">
             YPO SEA Learning Calendar
           </Link>
-          <MemberNav links={links} userLabel={`${user.name} · ${user.chapterName}`} />
+          <MemberNav
+            links={links}
+            user={{ name: user.name, email: user.email, chapterName: user.chapterName, isAdmin: isAdmin(user) }}
+          />
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
