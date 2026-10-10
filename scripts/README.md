@@ -8,6 +8,7 @@ The password is read from `$YPO_PASSWORD` or prompted without echo.
 - `build-fy27-calendars.py` — regenerates `scripts/data/fy27-sea-calendars.json` from the hand-normalised FY26/27 chapter calendars (19 chapters, 286 events; conventions in the script header). Import it with `import-events.py <url> <admin> scripts/data/fy27-sea-calendars.json`.
 - `check-chapters.py <url> <admin>` — lists chapters with codes and event counts, flagging duplicate names.
 - `merge-chapter.py <url> <admin> <from code> <into code> [--apply]` — folds a duplicate chapter into another (dry run by default).
+- `remove-demo-data.py <url> <admin> [--apply]` — deletes the six sample events and the fictional speakers/agendas added during development, and disables the Test Member account (dry run by default).
 - `import-events.py <url> <admin email> [file.json] [--chapters VN,VNG]` — recreates them on another instance, creating missing chapters and event types first. Existing titles are skipped, so it is safe to re-run; add `--update` to overwrite existing events' details (including chairs, resources and agenda) while keeping their status and registrations.
 
 Typical move from local dev to production:
