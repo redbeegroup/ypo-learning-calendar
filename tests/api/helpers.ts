@@ -48,12 +48,20 @@ export async function createEventType(name = "Business") {
   return prisma.eventType.create({ data: { name } });
 }
 
+/** ISO timestamp `days` from now at `hourUtc`, so fixtures never age into the past. */
+export function daysFromNow(days: number, hourUtc = 1): string {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() + days);
+  d.setUTCHours(hourUtc, 0, 0, 0);
+  return d.toISOString();
+}
+
 export function eventBody(overrides: Record<string, unknown> = {}) {
   return {
     title: "Leadership Breakfast",
     description: "Coffee and **ideas**",
-    startAt: "2026-10-01T01:00:00.000Z",
-    endAt: "2026-10-01T03:00:00.000Z",
+    startAt: daysFromNow(30, 1),
+    endAt: daysFromNow(30, 3),
     timezone: "Asia/Singapore",
     venue: "Raffles Hotel",
     isOnline: false,

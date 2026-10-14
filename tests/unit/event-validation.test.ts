@@ -45,6 +45,12 @@ describe("eventInputSchema", () => {
       true,
     );
   });
+  it("accepts uploaded image paths and absolute urls, rejects other strings", () => {
+    expect(eventInputSchema.safeParse({ ...valid, coverImageUrl: "/api/uploads/3f2a-1b.webp" }).success).toBe(true);
+    expect(eventInputSchema.safeParse({ ...valid, coverImageUrl: "https://cdn.example.com/a.jpg" }).success).toBe(true);
+    expect(eventInputSchema.safeParse({ ...valid, coverImageUrl: "/etc/passwd" }).success).toBe(false);
+    expect(eventInputSchema.safeParse({ ...valid, coverImageUrl: "not a url" }).success).toBe(false);
+  });
   it("rejects unknown timezone and bad urls", () => {
     expect(eventInputSchema.safeParse({ ...valid, timezone: "Nope/Nope" }).success).toBe(false);
     expect(eventInputSchema.safeParse({ ...valid, isOnline: true, onlineUrl: "not a url" }).success).toBe(false);

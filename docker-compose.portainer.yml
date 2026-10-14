@@ -28,6 +28,8 @@ services:
       SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
       SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-Super Admin}
+    volumes:
+      - uploads:/app/uploads
     ports:
       - "${APP_BIND:-0.0.0.0}:${APP_PORT:-3030}:3000"
     depends_on:
@@ -91,4 +93,5 @@ services:
 
 volumes:
   pgdata:
+  uploads:
   backups:

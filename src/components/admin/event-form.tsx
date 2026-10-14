@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Switch } from "@/components/ui/switch";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { api, ClientApiError } from "@/lib/api-client";
@@ -272,8 +272,12 @@ export function EventForm({ chapters, types, lockedChapterId, defaultChapterId, 
           {err("description")}
         </div>
         <div className="space-y-1">
-          <Label htmlFor="coverImageUrl">Cover image URL (optional)</Label>
-          <Input id="coverImageUrl" placeholder="https://…" {...register("coverImageUrl")} />
+          <Label>Cover image (optional)</Label>
+          <Controller
+            control={control}
+            name="coverImageUrl"
+            render={({ field }) => <ImageUpload value={field.value} onChange={field.onChange} variant="cover" label="Upload cover image" />}
+          />
           {err("coverImageUrl")}
         </div>
       </section>
@@ -313,14 +317,26 @@ export function EventForm({ chapters, types, lockedChapterId, defaultChapterId, 
             />
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Controller
-            control={control}
-            name="isOnline"
-            render={({ field }) => <Switch id="isOnline" checked={field.value} onCheckedChange={field.onChange} />}
-          />
-          <Label htmlFor="isOnline">Online event</Label>
-        </div>
+        <Controller
+          control={control}
+          name="isOnline"
+          render={({ field }) => (
+            <RadioGroup
+              value={field.value ? "ONLINE" : "OFFLINE"}
+              onValueChange={(v) => field.onChange(v === "ONLINE")}
+              className="flex gap-6"
+            >
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="OFFLINE" id="fmt-offline" />
+                <Label htmlFor="fmt-offline">Offline event</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="ONLINE" id="fmt-online" />
+                <Label htmlFor="fmt-online">Online event</Label>
+              </div>
+            </RadioGroup>
+          )}
+        />
         {isOnline ? (
           <div className="space-y-1">
             <Label htmlFor="onlineUrl">Join link</Label>
@@ -429,7 +445,11 @@ export function EventForm({ chapters, types, lockedChapterId, defaultChapterId, 
               {errors.resources?.[i]?.name?.message && (
                 <p className="text-xs text-destructive">{String(errors.resources[i]?.name?.message)}</p>
               )}
-              <Input placeholder="Photo URL (https://…, optional)" {...register(`resources.${i}.photoUrl` as const)} />
+              <Controller
+                control={control}
+                name={`resources.${i}.photoUrl` as const}
+                render={({ field }) => <ImageUpload value={field.value} onChange={field.onChange} variant="avatar" label="Upload photo" />}
+              />
               {errors.resources?.[i]?.photoUrl?.message && (
                 <p className="text-xs text-destructive">{String(errors.resources[i]?.photoUrl?.message)}</p>
               )}

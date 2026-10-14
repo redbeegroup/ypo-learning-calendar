@@ -16,6 +16,16 @@ const nullableUrl = z
   .nullable()
   .optional()
   .transform((v) => v || null);
+
+/** An uploaded image path (/api/uploads/<file>) or an absolute http(s) URL. */
+export const UPLOAD_PATH = /^\/api\/uploads\/[A-Za-z0-9_-]+\.(webp|jpg|jpeg|png|gif)$/;
+const nullableImage = z
+  .string()
+  .max(2000)
+  .refine((v) => UPLOAD_PATH.test(v) || /^https?:\/\/\S+$/.test(v), "Must be an uploaded image or an http(s) URL")
+  .nullable()
+  .optional()
+  .transform((v) => v || null);
 const nullableText = z
   .string()
   .max(5000)
@@ -27,7 +37,7 @@ export const VISIBILITIES = ["LOCAL", "REGIONAL", "CHAPTER_SPECIFIC"] as const;
 
 export const resourceSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(120),
-  photoUrl: nullableUrl,
+  photoUrl: nullableImage,
   bio: z.string().max(5000).default(""),
 });
 export type EventResource = z.infer<typeof resourceSchema>;
@@ -52,7 +62,7 @@ export const eventInputSchema = z
     venue: z.string().trim().max(300).default(""),
     isOnline: z.boolean().default(false),
     onlineUrl: nullableUrl,
-    coverImageUrl: nullableUrl,
+    coverImageUrl: nullableImage,
     visibility: z.enum(VISIBILITIES),
     accessChapterIds: z.array(z.string().min(1)).default([]),
     capacity: z

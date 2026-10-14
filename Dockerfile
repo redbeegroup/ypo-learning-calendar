@@ -47,6 +47,8 @@ COPY --from=prisma-cli --chown=app:app /cli/node_modules ./cli/node_modules
 # The seed script needs bcryptjs at the top level; standalone output only bundles it into server chunks.
 COPY --from=prisma-cli --chown=app:app /cli/node_modules/bcryptjs ./node_modules/bcryptjs
 COPY --chown=app:app docker/entrypoint.sh /entrypoint.sh
+RUN mkdir -p /app/uploads && chown app:app /app/uploads
+ENV UPLOAD_DIR=/app/uploads
 USER app
 EXPOSE 3000
 ENTRYPOINT ["sh", "/entrypoint.sh"]

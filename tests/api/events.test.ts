@@ -3,7 +3,7 @@ import { GET as listEvents, POST as createEvent } from "@/app/api/v1/events/rout
 import { GET as getEvent, PATCH as updateEvent, DELETE as deleteEvent } from "@/app/api/v1/events/[id]/route";
 import { POST as publishEvent } from "@/app/api/v1/events/[id]/publish/route";
 import { POST as cancelEvent } from "@/app/api/v1/events/[id]/cancel/route";
-import { jsonRequest, createChapter, createUser, createEventType, tokenFor, eventBody } from "./helpers";
+import { jsonRequest, createChapter, createUser, createEventType, tokenFor, eventBody, daysFromNow } from "./helpers";
 
 const p = (id: string) => ({ params: Promise.resolve({ id }) });
 const noParams = { params: Promise.resolve({}) };
@@ -48,7 +48,7 @@ describe("POST /api/v1/events", () => {
       eventBody({
         hostChapterId: w.sg.id,
         eventTypeId: w.type.id,
-        endAt: "2026-09-01T00:00:00.000Z",
+        endAt: daysFromNow(29),
         paymentType: "PAID",
       }),
     );
@@ -183,8 +183,8 @@ describe("GET /api/v1/events and /:id", () => {
     });
     const later = await mk({
       title: "December Retreat",
-      startAt: "2026-12-05T01:00:00.000Z",
-      endAt: "2026-12-06T09:00:00.000Z",
+      startAt: daysFromNow(90, 1),
+      endAt: daysFromNow(91, 9),
     });
     const draft = await mk({ title: "Secret Draft" }, false);
     return { regional, local, paid, later, draft };
@@ -197,7 +197,7 @@ describe("GET /api/v1/events and /:id", () => {
   it("members see published events only, sorted by date, with registration info", async () => {
     const w = await world();
     await seedEvents(w);
-    const res = await list("?from=2026-09-01T00:00:00.000Z", await w.t(w.myMember));
+    const res = await list(`?from=${daysFromNow(0, 0)}`, await w.t(w.myMember));
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.data.items.map((e: { title: string }) => e.title)).toEqual([
@@ -215,15 +215,15 @@ describe("GET /api/v1/events and /:id", () => {
     const w = await world();
     await seedEvents(w);
     const tok = await w.t(w.myMember);
-    expect(await titles(await list("?q=marina&from=2026-09-01T00:00:00.000Z", tok))).toEqual(["Regional Summit"]);
-    expect(await titles(await list(`?chapterIds=${w.my.id}&from=2026-09-01T00:00:00.000Z`, tok))).toEqual([
+    expect(await titles(await list(`?q=marina&from=${daysFromNow(0, 0)}`, tok))).toEqual(["Regional Summit"]);
+    expect(await titles(await list(`?chapterIds=${w.my.id}&from=${daysFromNow(0, 0)}`, tok))).toEqual([
       "Paid Workshop",
     ]);
-    expect(await titles(await list("?payment=PAID&from=2026-09-01T00:00:00.000Z", tok))).toEqual(["Paid Workshop"]);
-    expect(await titles(await list("?from=2026-12-01T00:00:00.000Z&to=2026-12-31T00:00:00.000Z", tok))).toEqual([
+    expect(await titles(await list(`?payment=PAID&from=${daysFromNow(0, 0)}`, tok))).toEqual(["Paid Workshop"]);
+    expect(await titles(await list(`?from=${daysFromNow(85, 0)}&to=${daysFromNow(95, 0)}`, tok))).toEqual([
       "December Retreat",
     ]);
-    expect(await titles(await list("?registrableOnly=true&from=2026-09-01T00:00:00.000Z", tok))).toEqual([
+    expect(await titles(await list(`?registrableOnly=true&from=${daysFromNow(0, 0)}`, tok))).toEqual([
       "Paid Workshop",
       "Regional Summit",
       "December Retreat",
@@ -233,10 +233,10 @@ describe("GET /api/v1/events and /:id", () => {
   it("admins can list drafts in their scope", async () => {
     const w = await world();
     await seedEvents(w);
-    expect(await titles(await list("?status=DRAFT&from=2026-09-01T00:00:00.000Z", await w.t(w.sgAdmin)))).toEqual([
+    expect(await titles(await list(`?status=DRAFT&from=${daysFromNow(0, 0)}`, await w.t(w.sgAdmin)))).toEqual([
       "Secret Draft",
     ]);
-    expect(await titles(await list("?status=DRAFT&from=2026-09-01T00:00:00.000Z", await w.t(w.myAdmin)))).toEqual([]);
+    expect(await titles(await list(`?status=DRAFT&from=${daysFromNow(0, 0)}`, await w.t(w.myAdmin)))).toEqual([]);
     expect((await list("?status=DRAFT", await w.t(w.sgMember))).status).toBe(403);
   });
 

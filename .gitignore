@@ -16,3 +16,5 @@ next-env.d.ts
 
 backups/
 .env.prod-rehearsal
+uploads/*
+!uploads/.gitkeep

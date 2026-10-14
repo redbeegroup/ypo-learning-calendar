@@ -11,6 +11,9 @@ export const env = {
   get jwtSecret() {
     return required("JWT_SECRET");
   },
+  get uploadDir() {
+    return process.env.UPLOAD_DIR ?? "uploads";
+  },
   get isProduction() {
     return process.env.NODE_ENV === "production";
   },
