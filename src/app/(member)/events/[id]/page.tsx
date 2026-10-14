@@ -78,8 +78,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           <Users className="mt-0.5 h-4 w-4 text-primary" />
           <span>
             {visibilityLabel(event)}
-            {event.capacity !== null && ` · ${event.registeredCount}/${event.capacity} registered`}
-            {event.waitlistedCount > 0 && ` · ${event.waitlistedCount} waitlisted`}
           </span>
         </div>
         <div className="flex items-start gap-2">
@@ -126,9 +124,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           <>
             <Button asChild variant="outline">
               <Link href={`/admin/events/${event.id}/edit`}>Edit event</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href={`/admin/events/${event.id}/registrations`}>Registrations</Link>
             </Button>
           </>
         )}

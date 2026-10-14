@@ -32,7 +32,7 @@ export = {
             "capacity": e["capacity"], "registrationOpensAt": e["registrationOpensAt"], "registrationClosesAt": e["registrationClosesAt"],
             "paymentType": e["paymentType"], "price": e["price"], "currency": e["currency"],
             "paymentInstructions": e["paymentInstructions"], "paymentUrl": e["paymentUrl"],
-            "chairs": e.get("chairs", []), "resources": e.get("resources", []), "agenda": e.get("agenda", []), "status": e["status"],
+            "registrationUrl": e.get("registrationUrl"), "chairs": e.get("chairs", []), "resources": e.get("resources", []), "agenda": e.get("agenda", []), "status": e["status"],
         }
         for e in sorted(events, key=lambda e: (e["startAt"], e["title"]))
     ],

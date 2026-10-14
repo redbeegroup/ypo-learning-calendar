@@ -69,7 +69,7 @@ for e in to_delete:
 for e in to_clean:
     body = {k: e[k] for k in ["title", "description", "startAt", "endAt", "timezone", "venue", "isOnline", "onlineUrl", "coverImageUrl",
                               "visibility", "capacity", "registrationOpensAt", "registrationClosesAt", "paymentType", "price", "currency",
-                              "paymentInstructions", "paymentUrl", "chairs"]}
+                              "paymentInstructions", "paymentUrl", "registrationUrl", "chairs"]}
     body.update(hostChapterId=e["hostChapter"]["id"], eventTypeId=e["eventType"]["id"],
                 accessChapterIds=[c["id"] for c in e["accessChapters"]], resources=[], agenda=[])
     s, b = api.call(f"/events/{e['id']}", "PATCH", body)

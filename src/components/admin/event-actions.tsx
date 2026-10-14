@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,9 +40,7 @@ export function EventActions({ event, afterChange }: Props) {
   return (
     <div className="flex flex-wrap items-center justify-end gap-2">
       {error && <span className="text-xs text-destructive">{error}</span>}
-      <Button asChild variant="outline" size="sm">
-        <Link href={`/admin/events/${event.id}/registrations`}>Registrations</Link>
-      </Button>
+      {/* In-app registration lists are hidden while registration runs through CVent; the page still exists at /admin/events/:id/registrations. */}
       {event.status === "DRAFT" && (
         <Button size="sm" disabled={busy} onClick={() => run("publish")}>
           Publish

@@ -123,6 +123,7 @@ model Event {
   currency             String?
   paymentInstructions  String?
   paymentUrl           String?
+  registrationUrl      String?
   chairs               String[]    @default([])
   resources            Json        @default("[]")
   agenda               Json        @default("[]")

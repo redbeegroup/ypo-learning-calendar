@@ -78,6 +78,7 @@ describe("programme fields", () => {
     const w = await world();
     const tok = await w.t(w.superAdmin);
     const programme = {
+      registrationUrl: "https://cvent.me/abc123",
       chairs: ["Mr. Minh Le", "Ms. Van Ma"],
       resources: [{ name: "Dr. Ada Lovelace", photoUrl: "https://example.com/ada.jpg", bio: "Pioneer of **computing**." }],
       agenda: [
@@ -87,6 +88,7 @@ describe("programme fields", () => {
     };
     const ok = await create(tok, eventBody({ hostChapterId: w.sg.id, eventTypeId: w.type.id, ...programme }));
     expect(ok.res.status).toBe(201);
+    expect(ok.body.data.registrationUrl).toBe(programme.registrationUrl);
     expect(ok.body.data.chairs).toEqual(programme.chairs);
     expect(ok.body.data.resources).toEqual(programme.resources);
     expect(ok.body.data.agenda).toEqual(programme.agenda);

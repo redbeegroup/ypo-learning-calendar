@@ -93,6 +93,7 @@ export const eventInputSchema = z
       .transform((v) => v || null),
     paymentInstructions: nullableText,
     paymentUrl: nullableUrl,
+    registrationUrl: nullableUrl,
     chairs: z.array(z.string().trim().min(1).max(120)).max(20).default([]),
     resources: z.array(resourceSchema).max(30).default([]),
     agenda: z.array(agendaItemSchema).max(100).default([]),

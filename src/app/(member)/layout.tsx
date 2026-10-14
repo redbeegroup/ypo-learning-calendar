@@ -11,7 +11,7 @@ export default async function MemberLayout({ children }: { children: React.React
   const links = [
     { href: "/events", label: "Events" },
     { href: "/events/calendar", label: "Calendar" },
-    { href: "/my-registrations", label: "My registrations" },
+    // "My registrations" is hidden while registration runs through CVent; the page still exists at /my-registrations.
   ];
 
   return (

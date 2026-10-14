@@ -48,13 +48,11 @@ export function visibilityLabel(event: Pick<EventDto, "visibility" | "hostChapte
 }
 
 export function registrationHint(
-  event: Pick<EventDto, "registration" | "visibility" | "hostChapter" | "accessChapters" | "spotsLeft" | "status">,
+  event: Pick<EventDto, "registration" | "visibility" | "hostChapter" | "accessChapters" | "status" | "registrationUrl">,
 ): string {
   if (event.status === "CANCELLED") return "Event cancelled";
   if (event.registration.ok) {
-    if (event.spotsLeft === 0) return "Full – waitlist available";
-    if (event.spotsLeft !== null) return `${event.spotsLeft} spot${event.spotsLeft === 1 ? "" : "s"} left`;
-    return "Open for registration";
+    return event.registrationUrl ? "Open for registration" : "Registration link to follow";
   }
   switch (event.registration.reason) {
     case "NOT_IN_SCOPE":

@@ -42,7 +42,6 @@ export default async function AdminEventsPage({ searchParams }: { searchParams: 
               <TableHead>Title</TableHead>
               <TableHead>When</TableHead>
               <TableHead>Chapter</TableHead>
-              <TableHead>Registered</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -50,7 +49,7 @@ export default async function AdminEventsPage({ searchParams }: { searchParams: 
           <TableBody>
             {result.items.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="py-8 text-center text-muted-foreground">
+                <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
                   No events.
                 </TableCell>
               </TableRow>
@@ -69,10 +68,6 @@ export default async function AdminEventsPage({ searchParams }: { searchParams: 
                   {formatEventRange(new Date(e.startAt), new Date(e.endAt), e.timezone)}
                 </TableCell>
                 <TableCell>{e.hostChapter.name}</TableCell>
-                <TableCell>
-                  {e.registeredCount}
-                  {e.capacity !== null && ` / ${e.capacity}`}
-                </TableCell>
                 <TableCell>
                   <StatusBadge status={e.status} />
                 </TableCell>

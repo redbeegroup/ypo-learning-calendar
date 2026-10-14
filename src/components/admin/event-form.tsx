@@ -42,6 +42,7 @@ const formSchema = z.object({
   currency: z.string(),
   paymentInstructions: z.string().max(5000),
   paymentUrl: z.string().max(2000),
+  registrationUrl: z.string().max(2000),
   chairs: z.array(z.object({ name: z.string().max(120) })),
   resources: z.array(z.object({ name: z.string().max(120), photoUrl: z.string().max(2000), bio: z.string().max(5000) })),
   agenda: z.array(z.object({ time: z.string().max(40), title: z.string().max(200), description: z.string().max(2000) })),
@@ -83,6 +84,7 @@ function toFormValues(event: EventDto | undefined, defaults: { chapterId: string
       currency: "SGD",
       paymentInstructions: "",
       paymentUrl: "",
+      registrationUrl: "",
       chairs: [],
       resources: [],
       agenda: [],
@@ -111,6 +113,7 @@ function toFormValues(event: EventDto | undefined, defaults: { chapterId: string
     currency: event.currency ?? "SGD",
     paymentInstructions: event.paymentInstructions ?? "",
     paymentUrl: event.paymentUrl ?? "",
+    registrationUrl: event.registrationUrl ?? "",
     chairs: event.chairs.map((name) => ({ name })),
     resources: event.resources.map((r) => ({ name: r.name, photoUrl: r.photoUrl ?? "", bio: r.bio })),
     agenda: event.agenda.map((a) => ({ time: a.time, title: a.title, description: a.description })),
@@ -142,6 +145,7 @@ function toApiBody(v: FormValues) {
     currency: v.currency || null,
     paymentInstructions: v.paymentInstructions || null,
     paymentUrl: v.paymentUrl || null,
+    registrationUrl: v.registrationUrl.trim() || null,
     chairs: v.chairs.map((c) => c.name.trim()).filter(Boolean),
     resources: v.resources
       .filter((r) => r.name.trim())
@@ -396,12 +400,15 @@ export function EventForm({ chapters, types, lockedChapterId, defaultChapterId, 
             )}
           />
         )}
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div className="space-y-1">
-            <Label htmlFor="capacity">Capacity (blank = unlimited)</Label>
-            <Input id="capacity" type="number" min={1} {...register("capacity")} />
-            {err("capacity")}
-          </div>
+        <div className="space-y-1">
+          <Label htmlFor="registrationUrl">CVent registration link</Label>
+          <Input id="registrationUrl" placeholder="https://cvent.me/…" {...register("registrationUrl")} />
+          <p className="text-xs text-muted-foreground">
+            Members who click Register are taken to this link. Leave blank until the CVent page is ready.
+          </p>
+          {err("registrationUrl")}
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1">
             <Label htmlFor="regOpensLocal">Registration opens (optional)</Label>
             <Input id="regOpensLocal" type="datetime-local" {...register("regOpensLocal")} />

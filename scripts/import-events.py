@@ -76,7 +76,7 @@ for e in data["events"]:
         "registrationOpensAt": e["registrationOpensAt"], "registrationClosesAt": e["registrationClosesAt"],
         "paymentType": e["paymentType"], "price": e["price"], "currency": e["currency"],
         "paymentInstructions": e["paymentInstructions"], "paymentUrl": e["paymentUrl"],
-        "chairs": e.get("chairs", []), "resources": e.get("resources", []), "agenda": e.get("agenda", []),
+        "registrationUrl": e.get("registrationUrl"), "chairs": e.get("chairs", []), "resources": e.get("resources", []), "agenda": e.get("agenda", []),
     }
     if key in existing:
         s, b = api.call(f"/events/{existing[key]}", "PATCH", body)
